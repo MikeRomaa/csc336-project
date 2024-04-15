@@ -20,3 +20,5 @@ INSERT INTO schedule (service_id, weekday, start, end)
 VALUES (1, 3, '10:00', '19:00');
 INSERT INTO schedule (service_id, weekday, start, end)
 VALUES (1, 4, '7:30', '16:00');
+
+/*INSERT INTO hs_property (broker_id, )

@@ -2,7 +2,7 @@ import type { ResultSetHeader, RowDataPacket } from "mysql2";
 
 import { pool } from "@/db/index";
 
-export interface hs_Schedule extends RowDataPacket {
+export interface Schedule extends RowDataPacket {
   id: number;
   property_id: number;
   start: Date;
@@ -12,8 +12,8 @@ export interface hs_Schedule extends RowDataPacket {
 /**
  * Retrieves all schedules made from database.
  */
-export async function getSchedules(): Promise<hs_Schedule[]> {
-  const [res] = await pool.execute<hs_Schedule[]>(
+export async function getSchedules(): Promise<Schedule[]> {
+  const [res] = await pool.execute<Schedule[]>(
     "SELECT * FROM bookings_db.hs_Schedule"
   );
 
@@ -25,8 +25,8 @@ export async function getSchedules(): Promise<hs_Schedule[]> {
  */
 export async function getSchedulesByPropertyID(
   property_id: number
-): Promise<hs_Schedule[]> {
-  const [res] = await pool.execute<hs_Schedule[]>(
+): Promise<Schedule[]> {
+  const [res] = await pool.execute<Schedule[]>(
     `SELECT * FROM bookings_db.hs_Schedule
         WHERE property_id = :property_id`,
     { property_id }
@@ -40,8 +40,8 @@ export async function getSchedulesByPropertyID(
  */
 export async function getUpcomingSchedules(
   property_id: number
-): Promise<hs_Schedule[]> {
-  const [res] = await pool.execute<hs_Schedule[]>(
+): Promise<Schedule[]> {
+  const [res] = await pool.execute<Schedule[]>(
     `SELECT * FROM bookings_db.hs_Schedule WHERE property_id = :property_id
         AND start > NOW()`,
     { property_id }

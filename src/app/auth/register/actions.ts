@@ -45,7 +45,7 @@ export async function register(
 	}
 
 	const id = await createUser(
-		first_name as string,
+		first_name as string, 
 		last_name as string,
 		email as string,
 		password as string,

@@ -9,7 +9,6 @@ import { State, register } from "@/app/auth/register/actions";
 
 const Register: NextPage = () => {
 	const [state, formAction] = useFormState<State, FormData>(register, {});
-
 	return (
 		<div className="container mx-auto py-20">
 			<Card className="max-w-96 mx-auto">
@@ -76,6 +75,7 @@ const Register: NextPage = () => {
 						</small>
 					</div>
 				</form>
+				
 			</Card>
 		</div>
 	);

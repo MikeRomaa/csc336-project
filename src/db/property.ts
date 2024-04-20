@@ -63,14 +63,26 @@ export async function createProperty(
     built: number
 ): Promise<number | null> {
 	try {
+    const params = {
+      broker_id,
+      address,
+      zipcode,
+      type,
+      price,
+      rooms,
+      area,
+      year_built: built !== undefined ? built : null // Replace undefined with null
+    };
+    
 		const [res] = await pool.execute<ResultSetHeader>(
 			`INSERT INTO bookings_db.hs_property (broker_id, address, zipcode, type, price, rooms, area, year_built)
             VALUES (:broker_id, :address, :zipcode, :type, :price, :rooms, :area, :year_built)`,
-			{ broker_id, address, zipcode, type, price, rooms, area, built },
+			params,
 		);
 
 		return res.insertId;
 	} catch (e) {
+    console.log("ERROR" + e)
 		return null;
 	}
 }

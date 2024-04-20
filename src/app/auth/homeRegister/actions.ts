@@ -44,12 +44,14 @@ export async function registerProperty(
   if (!sessionCookie) {
     return { fieldErrors: { session: "Session cookie not found" } };
   }
+  console.log(sessionCookie);
   const decryptedUser = decryptCookie(sessionCookie);
+  console.log(decryptedUser);
   if (!decryptedUser) {
     return { fieldErrors: { session: "Invalid session cookie" } };
   }
   const brokerId = decryptedUser.id;
-
+  console.log(address);
   const property_id = await createProperty(
     brokerId as number,
     address as string,
@@ -61,8 +63,10 @@ export async function registerProperty(
     year_built as number
   );
 
+  console.log("PROPERTY ID: " + property_id);
+
   if (!property_id) {
-    return { fieldErrors: { email: "Property already registered." } };
+    return { fieldErrors: { property: "Property already registered." } };
   }
 
   const property: Property = {

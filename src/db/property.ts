@@ -2,23 +2,36 @@ import type { ResultSetHeader, RowDataPacket } from "mysql2";
 
 import { pool } from "@/db/index";
 
-export interface Property extends RowDataPacket {
-  id: number;
+export interface PropertyF extends RowDataPacket {
+  property_id: number;
   broker_id: number;
   address: string;
   zipcode: number;
   type: string;
-  price?: number;
-  rooms?: number;
-  area?: number;
-  built?: number;
+  price: number;
+  rooms: number;
+  area: number;
+  built: number;
 }
+
+export type Property = Pick<
+  PropertyF,
+  | "property_id"
+  | "broker_id"
+  | "address"
+  | "zipcode"
+  | "type"
+  | "price"
+  | "rooms"
+  | "area"
+  | "built"
+>;
 
 /**
  * Retrieves all properties from database.
  */
 export async function getProperties(): Promise<Property[]> {
-  const [res] = await pool.execute<Property[]>(
+  const [res] = await pool.execute<PropertyF[]>(
     "SELECT * FROM bookings_db.hs_property"
   );
 
@@ -30,8 +43,8 @@ export async function getProperties(): Promise<Property[]> {
  */
 export async function getPropertiesByZipcode(
   zipcode: number
-): Promise<Property[]> {
-  const [res] = await pool.execute<Property[]>(
+): Promise<PropertyF[]> {
+  const [res] = await pool.execute<PropertyF[]>(
     `SELECT * FROM bookings_db.hs_property
         WHERE zipcode = :zipcode`,
     { zipcode }
@@ -45,23 +58,40 @@ export async function getPropertiesByZipcode(
  *
  * @returns id of newly created property
  */
+
 export async function createProperty(
   broker_id: number,
   address: string,
   zipcode: number,
   type: string,
-  price?: number,
-  rooms?: number,
-  area?: number,
-  built?: number
-): Promise<number> {
-  const [res] = await pool.execute<ResultSetHeader>(
-    `INSERT INTO bookings_db.hs_property (broker_id, address, zipcode, type, price, rooms, area, year_built)
-        VALUES (:broker_id, :address, :zipcode, :type, :price, :rooms, :area, :year_built)`,
-    { broker_id, address, zipcode, type, price, rooms, area, built }
-  );
+  price: number,
+  rooms: number,
+  area: number,
+  built: number
+): Promise<number | null> {
+  try {
+    const params = {
+      broker_id,
+      address,
+      zipcode,
+      type,
+      price,
+      rooms,
+      area,
+      year_built: built !== undefined ? built : null, // Replace undefined with null
+    };
 
-  return res.insertId;
+    const [res] = await pool.execute<ResultSetHeader>(
+      `INSERT INTO bookings_db.hs_property (broker_id, address, zipcode, type, price, rooms, area, year_built)
+            VALUES (:broker_id, :address, :zipcode, :type, :price, :rooms, :area, :year_built)`,
+      params
+    );
+
+    return res.insertId;
+  } catch (e) {
+    console.log("ERROR" + e);
+    return null;
+  }
 }
 
 /**

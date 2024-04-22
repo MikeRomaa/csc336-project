@@ -8,8 +8,6 @@ INSERT INTO user (id, first_name, last_name, email, password_hash)
 VALUES (3, 'Tyler', 'Ortiz', 'idk@gmail.com', '');
 INSERT INTO user (id, first_name, last_name, email, password_hash)
 VALUES (4, 'James', 'Zou', 'zoujames97@gmail.com', '');
-INSERT INTO user (id, first_name, last_name, email, password_hash)
-VALUES (5, 'Kevin', 'Zheng', 'kevinzheng700@gmail.com', '');
 
 INSERT INTO service (id, name, admin_id, timezone, duration, active, description)
 VALUES (1, 'CS/Math Tutoring', 1, 'America/New_York', 60, true, 'Get help for any MATH or CSC courses!');
@@ -22,6 +20,3 @@ INSERT INTO schedule (service_id, weekday, start, end)
 VALUES (1, 3, '10:00', '19:00');
 INSERT INTO schedule (service_id, weekday, start, end)
 VALUES (1, 4, '7:30', '16:00');
-
-INSERT INTO hs_property(id, broker_id, address, zipcode, type, price, rooms, area, year_built)
-VALUES (1, 5, '123 Place St', 10000, NULL, 69000);

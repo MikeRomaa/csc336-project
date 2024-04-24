@@ -4,10 +4,10 @@ CREATE TABLE hs_property (
     broker_id   INT UNSIGNED NOT NULL,
     address     VARCHAR(64)  NOT NULL,
     zipcode     VARCHAR(16)  NOT NULL,
-    type        VARCHAR(64)  NULL,
-    price       int UNSIGNED NULL,
+    type        VARCHAR(16)  NULL,
+    price       INT UNSIGNED NULL,
     rooms       INT UNSIGNED NULL,
-    area        FLOAT        NULL,
+    area        INT UNSIGNED NULL,
     year_built  INT UNSIGNED NULL,
 
     PRIMARY KEY (id),
@@ -28,7 +28,8 @@ CREATE TABLE hs_appointment (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT,
     schedule_id INT UNSIGNED NOT NULL,
     user_id     INT UNSIGNED NOT NULL,
-    status      VARCHAR(35)  NULL,
+    start       DATETIME     NOT NULL,
+    end         DATETIME     NOT NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (schedule_id) REFERENCES hs_schedule(id),

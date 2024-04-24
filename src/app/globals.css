@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 a {
-    @apply text-blue-500;
+  @apply text-blue-500;
 }
 
 a:visited {
-    @apply text-violet-400;
+  @apply text-violet-400;
 }

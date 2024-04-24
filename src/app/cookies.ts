@@ -1,6 +1,6 @@
 import { createCipheriv, createDecipheriv } from "node:crypto";
 
-import { User } from "@/db/auth";
+import { User } from "@/db/tutortime/auth";
 
 const ALGO = "aes-256-cbc";
 

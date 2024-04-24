@@ -3,94 +3,150 @@ import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { pool } from "@/db/index";
 
 export interface Appointment extends RowDataPacket {
-  id: number;
-  schedule_id: number;
-  user_id: number;
-  status: string;
+	id: number;
+	schedule_id: number;
+	user_id: number;
+	start: Date;
+	end: Date;
 }
 
 /**
- * Retrieves all schedules made from database.
+ * Retrieves all appointments from a given user id.
  */
-export async function getSchedules(): Promise<Appointment[]> {
-  const [res] = await pool.execute<Appointment[]>(
-    "SELECT * FROM bookings_db.hs_Schedule"
-  );
-
-  return res;
-}
-
-/**
- * Retrieves all schedules made for a certain property from database.
- */
-export async function getSchedulesByPropertyID(
-  property_id: number
+export async function getAppointmentsByUser(
+	user_id: number,
 ): Promise<Appointment[]> {
-  const [res] = await pool.execute<Appointment[]>(
-    `SELECT * FROM bookings_db.hs_Schedule
-        WHERE property_id = :property_id`,
-    { property_id }
-  );
+	const [res] = await pool.execute<Appointment[]>(
+		`SELECT A.start, A.end, P.address, P.zipcode, P.type
+		FROM bookings_db.hs_appointment AS A
+		INNER JOIN bookings_db.user AS U ON U.id = A.user_id
+		INNER JOIN bookings_db.hs_schedule AS S ON A.schedule_id = S.id
+		INNER JOIN bookings_db.hs_property AS P ON P.id = S.property_id
+		WHERE U.id = :user_id`,
+		{ user_id },
+	);
 
-  return res;
+	return res;
 }
 
 /**
- * Retrieves all upcoming schedules for a certain property from database.
+ * Retrieves upcoming appointments from a given user id.
  */
-export async function getUpcomingSchedules(
-  property_id: number
+export async function getUpcomingAppointmentsByUser(
+	user_id: number,
 ): Promise<Appointment[]> {
-  const [res] = await pool.execute<Appointment[]>(
-    `SELECT * FROM bookings_db.hs_Schedule WHERE property_id = :property_id
-        AND start > NOW()`,
-    { property_id }
-  );
+	const [res] = await pool.execute<Appointment[]>(
+		`SELECT A.start, A.end, P.address, P.zipcode, P.type
+		FROM bookings_db.hs_appointment AS A
+		INNER JOIN bookings_db.user AS U ON U.id = A.user_id
+		INNER JOIN bookings_db.hs_schedule AS S ON A.schedule_id = S.id
+		INNER JOIN bookings_db.hs_property AS P ON P.id = S.property_id
+		WHERE U.id = :user_id
+		AND A.start > CURRENT_TIMESTAMP`,
+		{ user_id },
+	);
 
-  return res;
+	return res;
 }
 
 /**
- * Creates a schedule with the given parameters.
+ * Retrieves all avaliable appointments made from a given property id.
+ */
+export async function getAppointmentsByProperty(
+	property_id: number,
+): Promise<Appointment[]> {
+	const [res] = await pool.execute<Appointment[]>(
+		`SELECT CONCAT(U.first_name, U.last_name), A.start, A.end, P.address, P.zipcode, P.type
+		FROM bookings_db.hs_appointment AS A
+		INNER JOIN bookings_db.hs_schedule AS S ON A.schedule_id = S.id
+		INNER JOIN bookings_db.user AS U ON U.id = A.user_id
+		INNER JOIN bookings_db.hs_property AS P ON P.id = S.property_id
+		WHERE P.id = :property_id`,
+		{ property_id },
+	);
+
+	return res;
+}
+
+/**
+ * Retrieves upcoming appointments from a property id.
+ */
+export async function getUpcomingAppointmentsByProperty(
+	property_id: number,
+): Promise<Appointment[]> {
+	const [res] = await pool.execute<Appointment[]>(
+		`SELECT CONCAT(U.first_name, U.last_name), A.start, A.end, P.address, P.zipcode, P.type
+		FROM bookings_db.hs_appointment AS A
+		INNER JOIN bookings_db.hs_schedule AS S ON A.schedule_id = S.id
+		INNER JOIN bookings_db.user AS U ON U.id = A.user_id
+		INNER JOIN bookings_db.hs_property AS P ON P.id = S.property_id
+		WHERE P.id = :property_id
+		AND A.start > CURRENT_TIMESTAMP`,
+		{ property_id },
+	);
+
+	return res;
+}
+
+/**
+ * Retrieves an appointment from a appointment id.
+ */
+export async function getAppointmentById(
+	id: number,
+): Promise<Appointment | null> {
+	const [res] = await pool.execute<Appointment[]>(
+		"SELECT * FROM bookings_db.hs_appointment WHERE id = :id",
+		{ id },
+	);
+	if (res.length !== 1) {
+		return null;
+	}
+
+	return res[0];
+}
+
+/**
+ * Creates a new appointment with the given parameters.
  *
- * @returns id of newly created schedule
+ * @returns id of newly created appointment
  */
-export async function createSchedule(
-  property_id: number,
-  start: Date,
-  end: Date
+export async function createAppointment(
+	schedule_id: number,
+	user_id: number,
+	start: Date,
+	end: Date,
 ): Promise<number> {
-  const [res] = await pool.execute<ResultSetHeader>(
-    `INSERT INTO bookings_db.hs_Schedule (property_id, start, end)
-        VALUES (:property_id, :start, :end)`,
-    { property_id, start, end }
-  );
+	const [res] = await pool.execute<ResultSetHeader>(
+		`INSERT INTO bookings_db.hs_appointment (schedule_id, user_id, start, end)
+		  VALUES (:schedule_id, :user_id, :start, :end)`,
+		{ schedule_id, user_id, start, end },
+	);
 
-  return res.insertId;
+	return res.insertId;
 }
 
 /**
- * Deletes a schedule with given id.
+ * Update certain fields of a appointment with a given id.
  */
-export async function deleteSchedule(id: number): Promise<void> {
-  await pool.execute("DELETE FROM bookings_db.hs_Schedule WHERE id = :id", {
-    id,
-  });
-}
-
-/**
- * Update time of a schedule with a given id.
- */
-export async function updateSchedule(
-  id: number,
-  start: Date,
-  end: Date
+export async function updateAppointment(
+	id: number,
+	start: Date,
+	end: Date,
 ): Promise<void> {
-  await pool.execute(
-    `UPDATE bookings_db.hs_Schedule
+	await pool.execute(
+		`UPDATE bookings_db.hs_appointment
         SET start = :start,
-            end = :end
+			end = :end
         WHERE id = :id`,
-    { start, end, id }
-  );
+		{ start, end, id },
+	);
+}
+
+/**
+ * Deletes appointment with given id.
+ */
+export async function deleteAppointment(id: number): Promise<void> {
+	await pool.execute("DELETE FROM bookings_db.hs_appointment WHERE id = :id", {
+		id,
+	});
 }

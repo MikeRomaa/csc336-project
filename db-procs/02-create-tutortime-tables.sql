@@ -1,4 +1,3 @@
-
 /*Tutor Time*/
 CREATE TABLE service (
     id          INT UNSIGNED NOT NULL AUTO_INCREMENT,

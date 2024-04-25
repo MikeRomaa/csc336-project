@@ -42,8 +42,8 @@ export async function registerProperty(
 	if (!type) {
 		fieldErrors.set("type", "Required");
 	}
-	if (type !== "sale" && type !== "house") {
-		fieldErrors.set("type", "Must either be for rent or for sale");
+	if (type !== "sale" && type !== "rent") {
+		fieldErrors.set("type", "Must either be rent or sale");
 	}
 	if (rooms && rooms < 1) {
 		fieldErrors.set("rooms", "Positive integer required");

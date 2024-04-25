@@ -1,5 +1,5 @@
 import { Button, Card } from "@tremor/react";
-
+import Link from "next/link";
 import { getProperties } from "@/db/homeseeker/property";
 
 export default async function Home() {
@@ -10,7 +10,7 @@ export default async function Home() {
 			<h1 className="mb-5 text-tremor-metric font-medium">Properties</h1>
 			<div className="grid grid-cols-2 gap-5">
 				{properties.map((property) => (
-					<Card key={property.property_id}>
+					<Card key={property.id}>
 						<div className="mb-3 flex items-center">
 							<div>
 								<h2 className="text-tremor-title font-medium">
@@ -20,7 +20,7 @@ export default async function Home() {
 									Offered by {property.zipcode}
 								</p>
 							</div>
-							<Button className="ml-auto">Book Now!</Button>
+							<Link href={`/homeseeker/schedule/?pid=${property.id}`}>Book Now</Link>
 						</div>
 						<p>{property.type}</p>
 					</Card>

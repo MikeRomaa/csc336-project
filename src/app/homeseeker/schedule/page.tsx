@@ -30,6 +30,7 @@ export default async function Schedule({
         <h1>{propertyInfo?.address}</h1>
         <h1>{propertyInfo?.zipcode}</h1>
         <form id='times-container'>
+            <Button>Save Times</Button>
             <label>Start</label>
             <input type="datetime-local"></input>
             <label>End</label>

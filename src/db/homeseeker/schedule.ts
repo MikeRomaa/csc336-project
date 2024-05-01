@@ -20,22 +20,6 @@ export async function getSchedules(): Promise<Schedule[]> {
 	return res;
 }
 
-/**
- * Retrieves schedule with a certian id
- */
-export async function getScheduleByID(
-	id: number,
-): Promise<Schedule | null> {
-	const [res] = await pool.execute<Schedule[]>(
-		`SELECT * FROM bookings_db.hs_schedule
-        WHERE id = :id`,
-		{ id },
-	);
-	if (res.length === 1) {
-		return res[0];
-	}
-	return null;
-}
 
 /**
  * Retrieves all schedules made for a certain property from database.

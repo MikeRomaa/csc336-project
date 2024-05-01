@@ -9,9 +9,10 @@ import { cookies } from "next/headers";
 import { decryptCookie } from "@/app/cookies";
 import { FormStatus } from "@/types";
 import { getCurrentUser } from "@/app/cookies";
+import { getPropertyByID } from "@/db/homeseeker/property";
 export type State = FormStatus<Schedule>;
 
-export default async function stupid() {
+/*export default async function stupid() {
     const startTime = document.createElement('input');
     startTime.type = 'datetime-local';
     const labelStart = document.createElement('label');
@@ -26,11 +27,12 @@ export default async function stupid() {
 
     const formContainer = document.createElement('form');
 
+
     document.getElementById("times-container")?.appendChild(document.createElement('br'));
     formContainer.appendChild(labelStart);
     formContainer.appendChild(labelEnd);
     document.getElementById("times-container")?.appendChild(formContainer);
-}
+}*/
 
 export async function makeSchedule(
     pid: number,
@@ -60,7 +62,6 @@ export async function makeSchedule(
 		pid as number,
         start_time as Date, 
         end_time as Date,
-		
 	);
 
     const schedule = await getScheduleByID(schedule_id);
@@ -68,4 +69,10 @@ export async function makeSchedule(
 		return "Failed to retrieve appointment.";
 	}
 	return schedule;
+
 }
+
+export async function fetchPropertyData(propertyId: number) {
+	const propertyData = await getPropertyByID(propertyId);
+	return propertyData;
+};

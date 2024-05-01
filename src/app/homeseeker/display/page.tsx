@@ -1,28 +1,34 @@
 import { Button, Card } from "@tremor/react";
 import Link from "next/link";
-import { getProperties } from "@/db/homeseeker/property";
+import { getSchedules } from "@/db/homeseeker/schedule";
 
 export default async function Home() {
-	const properties = await getProperties();
+	const schedules = await getSchedules();
 
 	return (
 		<div className="container mx-auto py-20">
-			<h1 className="mb-5 text-tremor-metric font-medium">Properties</h1>
+			<h1 className="mb-5 text-tremor-metric font-medium">Schedules</h1>
 			<div className="grid grid-cols-2 gap-5">
-				{properties.map((property) => (
-					<Card key={property.id}>
+				{schedules.map((schedule) => (
+					<Card key={schedule.id}>
 						<div className="mb-3 flex items-center">
 							<div>
-								<h2 className="text-tremor-title font-medium">
-									{property.address}
-								</h2>
+								<h2 className="text-tremor-title font-medium">{schedule.id}</h2>
 								<p className="text-slate-600 text-sm">
-									Offered by {property.zipcode}
+									Start time: {new Date(schedule.start).toLocaleString()}
+								</p>
+								<p className="text-slate-600 text-sm">
+									End time: {new Date(schedule.end).toLocaleString()}
 								</p>
 							</div>
-							<Link href={`/homeseeker/schedule/?pid=${property.id}`}>Book Now</Link>
+							<Link href={{
+								pathname: '/homeseeker/makeappointment', query: {
+									schedule: schedule.id
+								}
+							}}>
+								<Button className="ml-auto">Make an appointment!</Button>
+							</Link>
 						</div>
-						<p>{property.type}</p>
 					</Card>
 				))}
 			</div>

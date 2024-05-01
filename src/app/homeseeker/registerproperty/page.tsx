@@ -2,9 +2,7 @@
 
 import { Button, Card, TextInput, NumberInput } from "@tremor/react";
 import { NextPage } from "next";
-import Link from "next/link";
 import { useFormState } from "react-dom";
-import { useEffect } from "react";
 
 import {
 	State,
@@ -16,9 +14,7 @@ const HomeRegister: NextPage = () => {
 		registerProperty,
 		{},
 	);
-	useEffect(() => {
-		console.log("Form data:", state);
-	}, [state]);
+
 	return (
 		<div className="container mx-auto py-20">
 			<Card className="max-w-96 mx-auto">
@@ -40,7 +36,7 @@ const HomeRegister: NextPage = () => {
 								required
 								name="zipcode"
 								type="text"
-								placeholder="Zip-code"
+								placeholder="Zipcode"
 								error={!!state.fieldErrors?.zipcode}
 								errorMessage={state.fieldErrors?.zipcode}
 							/>
@@ -50,7 +46,7 @@ const HomeRegister: NextPage = () => {
 								required
 								name="type"
 								type="text"
-								placeholder="For Sale or For Rent"
+								placeholder="House for sale"
 								error={!!state.fieldErrors?.type}
 								errorMessage={state.fieldErrors?.type}
 							/>

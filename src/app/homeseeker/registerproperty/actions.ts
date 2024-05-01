@@ -3,11 +3,10 @@
 import {
 	Property,
 	createProperty,
-	getPropertyById,
+	getPropertyByID,
 	getPropertyByAddress,
 } from "@/db/homeseeker/property";
-import { cookies } from "next/headers";
-import { decryptCookie } from "@/app/cookies";
+import { getCurrentUser } from "@/app/cookies";
 import { FormStatus } from "@/types";
 
 export type State = FormStatus<Property>;
@@ -42,6 +41,8 @@ export async function registerProperty(
 	if (!type) {
 		fieldErrors.set("type", "Required");
 	}
+	if (!type?.includes("sale") && !type?.includes("rent")) {
+		fieldErrors.set("type", "Must include for rent or for sale");
 	if (type !== "sale" && type !== "rent") {
 		fieldErrors.set("type", "Must either be rent or sale");
 	}
@@ -62,17 +63,10 @@ export async function registerProperty(
 	}
 
 	// Get user currently logged in
-	const sessionCookie = cookies()?.get("session")?.value;
-	if (!sessionCookie) {
-		return { formError: "Session cookie not found" };
+	const broker = getCurrentUser();
+	if (!broker) {
+		return { formError: "Failed to get user" }
 	}
-	console.log(sessionCookie);
-	const decryptedUser = decryptCookie(sessionCookie);
-	console.log(decryptedUser);
-	if (!decryptedUser) {
-		return { formError: "Invalid session cookie" };
-	}
-	const brokerId = decryptedUser.id;
 
 	// Check if the address was already registered
 	const existingProperty = await getPropertyByAddress(address as string);
@@ -82,7 +76,7 @@ export async function registerProperty(
 
 	// Create the property
 	const property_id = await createProperty(
-		brokerId as number,
+		broker.id as number,
 		address as string,
 		zipcode as number,
 		type as string,
@@ -96,7 +90,7 @@ export async function registerProperty(
 	}
 
 	// Get the property so it can be returned
-	const property = await getPropertyById(property_id);
+	const property = await getPropertyByID(property_id);
 	if (!property) {
 		return { formError: "Failed to retrieve property." };
 	}

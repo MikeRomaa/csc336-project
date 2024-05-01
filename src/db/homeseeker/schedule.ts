@@ -36,19 +36,17 @@ export async function getSchedulesByPropertyID(
 	return res;
 }
 
-export async function getScheduleByID(
-  schedule_id: number
-): Promise<Schedule | null> {
-  const [res] = await pool.execute<Schedule[]>(
-    `SELECT * FROM bookings_db.hs_Schedule
-        WHERE schedule_id = :id`,
-    { schedule_id }
-  );
+export async function getScheduleByID(id: number): Promise<Schedule | null> {
+	const [res] = await pool.execute<Schedule[]>(
+		`SELECT * FROM bookings_db.hs_schedule
+        WHERE id = :id`,
+		{ id },
+	);
+	if (res.length !== 1) {
+		return null;
+	}
 
-  if (res.length === 1) {
-    return res[0];
-  }
-  return null;
+	return res[0];
 }
 
 /**
@@ -75,14 +73,25 @@ export async function createSchedule(
 	property_id: number,
 	start: Date,
 	end: Date,
-): Promise<number> {
-	const [res] = await pool.execute<ResultSetHeader>(
-		`INSERT INTO bookings_db.hs_schedule (property_id, start, end)
-        VALUES (:property_id, :start, :end)`,
-		{ property_id, start, end },
-	);
-
-	return res.insertId;
+): Promise<number | null> {
+  try {
+    const params = {
+			property_id,
+      start,
+      end,
+		};
+    const [res] = await pool.execute<ResultSetHeader>(
+      `INSERT INTO bookings_db.hs_schedule (property_id, start, end)
+          VALUES (:property_id, :start, :end)`,
+      params,
+    );
+  
+    return res.insertId;
+  } catch (e) {
+    console.error(e);
+		return null;
+  }
+	
 }
 
 /**

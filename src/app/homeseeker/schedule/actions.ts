@@ -63,10 +63,12 @@ export async function makeSchedule(
         start_time as Date, 
         end_time as Date,
 	);
-
+    if (!schedule_id) {
+		return "failed to make schedule";
+	}
     const schedule = await getScheduleByID(schedule_id);
 	if (!schedule) {
-		return "Failed to retrieve appointment.";
+		return "Failed to retrieve schedule.";
 	}
 	return schedule;
 

@@ -50,7 +50,24 @@ export async function getUpcomingAppointmentsByUser(
 }
 
 /**
- * Retrieves all avaliable appointments made from a given property id.
+ * Retrieves all available appointments made from a given property id.
+ */
+export async function getAppointmentsBySchedule(
+	schedule_id: number,
+): Promise<Appointment[]> {
+	const [res] = await pool.execute<Appointment[]>(
+		`SELECT A.start, A.end
+		FROM bookings_db.hs_appointment AS A
+		INNER JOIN bookings_db.hs_schedule AS S ON A.schedule_id = S.id
+		WHERE S.id = :schedule_id`,
+		{ schedule_id },
+	);
+
+	return res;
+}
+
+/**
+ * Retrieves all available appointments made from a given property id.
  */
 export async function getAppointmentsByProperty(
 	property_id: number,
@@ -91,7 +108,7 @@ export async function getUpcomingAppointmentsByProperty(
 /**
  * Retrieves an appointment from a appointment id.
  */
-export async function getAppointmentById(
+export async function getAppointmentByID(
 	id: number,
 ): Promise<Appointment | null> {
 	const [res] = await pool.execute<Appointment[]>(

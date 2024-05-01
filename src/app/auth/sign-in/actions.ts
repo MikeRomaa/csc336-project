@@ -1,6 +1,6 @@
 "use server";
 
-import { User, getUser } from "@/db/tutortime/auth";
+import { User, getUser } from "@/db/auth";
 import { cookies } from "next/headers";
 
 import { encryptCookie } from "@/app/cookies";

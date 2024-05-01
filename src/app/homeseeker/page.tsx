@@ -1,8 +1,8 @@
 import { Button, Card } from "@tremor/react";
-import { getProperties } from "@/db/homeseeker/property";
+import { filterPropertiesByUser } from "./action";
 
 export default async function Home() {
-	const properties = await getProperties();
+	const properties = await filterPropertiesByUser();
 
 	return (
 		<div className="container mx-auto py-20">
@@ -16,7 +16,7 @@ export default async function Home() {
 									{property.address}
 								</h2>
 								<p className="text-slate-600 text-sm">
-									Offered by {property.zipcode}
+									Offered by {property.broker_id}
 								</p>
 							</div>
 							<Button className="ml-auto">Book Now!</Button>

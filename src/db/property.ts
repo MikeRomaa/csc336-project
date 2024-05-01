@@ -26,19 +26,6 @@ export async function getProperties(): Promise<Property[]> {
 }
 
 /**
- * Retrieves properties from database given a user id
- */
-export async function getPropertiesByUser(user: number): Promise<Property[]> {
-	const [res] = await pool.execute<Property[]>(
-		`SELECT * FROM bookings_db.hs_property
-		WHERE broker_id = :user`,
-		{ user }
-	);
-
-	return res;
-}
-
-/**
  * Retrieves all properties from a certain zipcode.
  */
 export async function getPropertiesByZipcode(
@@ -51,40 +38,6 @@ export async function getPropertiesByZipcode(
 	);
 
 	return res;
-}
-
-/**
- * Retrieve a property with given id
- */
-export async function getPropertyByID(id: number): Promise<Property | null> {
-	const [res] = await pool.execute<Property[]>(
-		`SELECT * FROM bookings_db.hs_property
-        WHERE id = :id`,
-		{ id },
-	);
-	if (res.length !== 1) {
-		return null;
-	}
-
-	return res[0];
-}
-
-/**
- * Retrieve a property with given address
- */
-export async function getPropertyByAddress(
-	address: string,
-): Promise<Property | null> {
-	const [res] = await pool.execute<Property[]>(
-		`SELECT * FROM bookings_db.hs_property
-        WHERE address = :address`,
-		{ address },
-	);
-	if (res.length === 1) {
-		return res[0];
-	}
-
-	return null;
 }
 
 /**
@@ -103,28 +56,24 @@ export async function createProperty(
 	area?: number,
 	built?: number,
 ): Promise<number | null> {
-	try {
-		const params = {
-			broker_id,
-			address,
-			zipcode,
-			type,
-			price: price !== undefined ? price : null, // Replace undefined with null
-			rooms: rooms !== undefined ? rooms : null, // Replace undefined with null
-			area: area !== undefined ? area : null, // Replace undefined with null
-			year_built: built !== undefined ? built : null, // Replace undefined with null
-		};
+	const params = {
+		broker_id,
+		address,
+		zipcode,
+		type,
+		price: price !== undefined ? price : null, // Replace undefined with null
+		rooms: rooms !== undefined ? rooms : null, // Replace undefined with null
+		area: area !== undefined ? area : null, // Replace undefined with null
+		year_built: built !== undefined ? built : null, // Replace undefined with null
+	};
 
-		const [res] = await pool.execute<ResultSetHeader>(
-			`INSERT INTO bookings_db.hs_property (broker_id, address, zipcode, type, price, rooms, area, year_built)
+	const [res] = await pool.execute<ResultSetHeader>(
+		`INSERT INTO bookings_db.hs_property (broker_id, address, zipcode, type, price, rooms, area, year_built)
             VALUES (:broker_id, :address, :zipcode, :type, :price, :rooms, :area, :year_built)`,
-			params,
-		);
-		return res.insertId;
-	} catch (e) {
-		console.error(e);
-		return null;
-	}
+		params,
+	);
+
+	return res.insertId;
 }
 
 /**

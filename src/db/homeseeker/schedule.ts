@@ -35,6 +35,21 @@ export async function getSchedulesByPropertyID(
   return res;
 }
 
+export async function getScheduleByID(
+  schedule_id: number
+): Promise<Schedule | null> {
+  const [res] = await pool.execute<Schedule[]>(
+    `SELECT * FROM bookings_db.hs_Schedule
+        WHERE schedule_id = :id`,
+    { schedule_id }
+  );
+
+  if (res.length === 1) {
+    return res[0];
+  }
+  return null;
+}
+
 /**
  * Retrieves all upcoming schedules for a certain property from database.
  */

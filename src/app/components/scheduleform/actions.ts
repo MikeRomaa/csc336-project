@@ -3,79 +3,106 @@
 import {
 	createSchedule,
 	Schedule,
-	getScheduleByID
+	getScheduleByID,
+	getSchedulesByPropertyID
 } from "@/db/homeseeker/schedule";
-import { cookies } from "next/headers";
-import { decryptCookie } from "@/app/cookies";
-import { FormStatus } from "@/types";
 import { getCurrentUser } from "@/app/cookies";
 import { getPropertyByID } from "@/db/homeseeker/property";
-export type State = FormStatus<Schedule>;
-
-/*export default async function stupid() {
-	const startTime = document.createElement('input');
-	startTime.type = 'datetime-local';
-	const labelStart = document.createElement('label');
-	labelStart.textContent = "Start";
-	labelStart.appendChild(startTime);
-
-	const endTime = document.createElement('input');
-	endTime.type = 'datetime-local';
-	const labelEnd = document.createElement('label');
-	labelEnd.textContent = "End";
-	labelEnd.appendChild(endTime);
-
-	const formContainer = document.createElement('form');
-
-
-	document.getElementById("times-container")?.appendChild(document.createElement('br'));
-	formContainer.appendChild(labelStart);
-	formContainer.appendChild(labelEnd);
-	document.getElementById("times-container")?.appendChild(formContainer);
-}*/
 
 export async function makeSchedule(
-	pid: number,
+	property_id: number,
 	start_time: Date,
 	end_time: Date,
 ): Promise<Schedule | string> {
 
-
 	// Errors checking
+	if (!start_time) {
+		return "Start time required.";
+	}
+	if (!end_time) {
+		return "End time required.";
+	}
 
+	// Schedules must be made 3 full days in advance
+	const today = new Date();
+	today.setDate(today.getDate() + 3);
+	today.setHours(0, 0, 0, 0);
+	const start = new Date(start_time);
+	start.setHours(0, 0, 0, 0);
+	if (start < today) {
+		return "Schedules must be made with 3 days in advance from current time.";
+	}
 
-	// Get user currently logged in
+	// Check if the start time and end time are valid
+	if (start_time > end_time) {
+		return "Start time must be earlier than end time.";
+	}
+
+	// Make sure schedules are made from 8am to 6pm
+	// Needs UTC in order to work which is 4 extra hours from EST
+	if (start_time.getHours() < 12) { // 4 + 8 = 12
+		return "Start time must be after 8:00 am.";
+	}
+	if (end_time.getHours() >= 22) { // 4 + 18 = 22
+		return "End time must be before 6:00 pm.";
+	}
+
+	// Restrict the time to be on the same date
+	if (
+		start_time.getFullYear() !== end_time.getFullYear() ||
+		start_time.getMonth() !== end_time.getMonth() ||
+		start_time.getDate() !== end_time.getDate()
+	) {
+		return "Schedules are restricted to the same date.";
+	}
+
+	// Make the duration long enough
+	const duration = (end_time.getTime() - start_time.getTime()) / 60000;
+	if (duration < 120) {
+		return "Appointments must be at least 2 hour long.";
+	}
+
 	// Get user currently logged in
 	const user = getCurrentUser();
 	if (!user) {
 		return "Not signed in";
 	}
 
-	/* Check if the address was already registered
-	const existingProperty = await getPropertyByAddress(address as string);
-	if (existingProperty !== null) {
-		return { formError: "Address already registered" };
-	}*/
+	//Check if this time slot interfers with any other schedules for this house 
+	const propertySchedules = await getSchedulesByPropertyID(property_id);
+	for (let i = 0; i < propertySchedules.length; i++) {
+		if (propertySchedules[i].start <= start_time && propertySchedules[i].end >= start_time) {
+			return "Schedule times overlap with existing time";
+		}
+		else if (propertySchedules[i].start >= start_time && (propertySchedules[i].start <= end_time && propertySchedules[i].end >= end_time)) {
+			return "Schedule times overlap With existing time";
+		}
+	}
 
 	// Create the property
 	const schedule_id = await createSchedule(
-		pid as number,
+		property_id as number,
 		start_time as Date,
 		end_time as Date,
 	);
 	if (!schedule_id) {
-		return "Error creating schedule"
+		return "Failed to make schedule";
 	}
 
 	// Get the schedule
 	const schedule = await getScheduleByID(schedule_id);
 	if (!schedule) {
-		return "Failed to retrieve appointment.";
+		return "Failed to retrieve schedule.";
 	}
 	return schedule;
 }
 
-export async function fetchPropertyData(property_id: number) {
-	const propertyData = await getPropertyByID(property_id);
+export async function fetchPropertyData(propertyId: number) {
+	const propertyData = await getPropertyByID(propertyId);
 	return propertyData;
+};
+
+export async function fetchPropertySchedules(propertyId: number) {
+	const propertySchedules = await getSchedulesByPropertyID(propertyId);
+	return propertySchedules;
 };

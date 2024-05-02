@@ -75,14 +75,25 @@ export async function createSchedule(
 	property_id: number,
 	start: Date,
 	end: Date,
-): Promise<number> {
-	const [res] = await pool.execute<ResultSetHeader>(
-		`INSERT INTO bookings_db.hs_schedule (property_id, start, end)
-        VALUES (:property_id, :start, :end)`,
-		{ property_id, start, end },
-	);
+): Promise<number | null> {
+	try {
+		const params = {
+			property_id,
+			start,
+			end,
+		};
+		const [res] = await pool.execute<ResultSetHeader>(
+			`INSERT INTO bookings_db.hs_schedule (property_id, start, end)
+          VALUES (:property_id, :start, :end)`,
+			params,
+		);
 
-	return res.insertId;
+		return res.insertId;
+	} catch (e) {
+		console.error(e);
+		return null;
+	}
+
 }
 
 /**

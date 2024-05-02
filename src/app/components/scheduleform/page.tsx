@@ -2,7 +2,7 @@
 
 import { Button, Card } from "@tremor/react";
 import { useState } from "react";
-import { makeSchedule } from '@/app/components/scheduleform/actions';
+import { makeSchedule } from "@/app/components/scheduleform/actions";
 
 const Scheduleform = ({ property_id }: { property_id: number }) => {
     const [input, setInput] = useState({
@@ -17,7 +17,7 @@ const Scheduleform = ({ property_id }: { property_id: number }) => {
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+        e.preventDefault();
         if (property_id) {
             const output = await makeSchedule(
                 property_id,
@@ -28,6 +28,7 @@ const Scheduleform = ({ property_id }: { property_id: number }) => {
                 setError(output);
             } else {
                 setError(null);
+                window.location.reload();
             }
         }
     }

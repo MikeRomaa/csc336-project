@@ -1,6 +1,7 @@
 "use client"
 
-import { Card } from "@tremor/react";
+import Link from "next/link";
+import { Card, Button } from "@tremor/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Appointment } from "@/db/homeseeker/appointment";
@@ -25,6 +26,7 @@ const Viewschedule = () => {
             setUser(userData);
             setAppointments(appointmentData);
             setProperty(propertyData);
+            console.log(userData)
         }
         fetchDetails()
     }, [schedule_id])
@@ -50,7 +52,17 @@ const Viewschedule = () => {
                     )}
                 </div>
             </div>
-            {user && user.id !== property?.broker_id && <Appointmentform schedule_id={schedule_id} />}
+            {user ? (
+                user.id !== property?.broker_id && <Appointmentform schedule_id={schedule_id} />
+            ) : (
+                <div className="grid place-items-center h-screen">
+                    <Button>
+                        <Link href="/auth/sign-in" className="color:white visited:text-white">
+                            <span>Please sign in to book an appointment!</span>
+                        </Link>
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };

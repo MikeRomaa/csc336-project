@@ -6,6 +6,7 @@ import { makeSchedule } from "@/app/components/scheduleform/actions";
 
 const Scheduleform = ({ property_id }: { property_id: number }) => {
     const [input, setInput] = useState({
+        date: "",
         start: "",
         end: "",
     });
@@ -19,10 +20,12 @@ const Scheduleform = ({ property_id }: { property_id: number }) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (property_id) {
+            const startDateTime = `${input.date}T${input.start}`;
+            const endDateTime = `${input.date}T${input.end}`;
             const output = await makeSchedule(
                 property_id,
-                new Date(input.start),
-                new Date(input.end),
+                new Date(startDateTime),
+                new Date(endDateTime)
             )
             if (typeof output === "string") {
                 setError(output);
@@ -42,12 +45,23 @@ const Scheduleform = ({ property_id }: { property_id: number }) => {
                         <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center gap-2 mt-3">
                             <div className="flex-1 w-full">
                                 <div className="w-full flex justify-center items-center m-2">
+                                    <label htmlFor="start">Date</label>
+                                    <input
+                                        className="ml-auto"
+                                        required
+                                        name="date"
+                                        type="date"
+                                        value={input.date}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                <div className="w-full flex justify-center items-center m-2">
                                     <label htmlFor="start">Start</label>
                                     <input
                                         className="ml-auto"
                                         required
                                         name="start"
-                                        type="datetime-local"
+                                        type="time"
                                         value={input.start}
                                         onChange={handleChange}
                                     />
@@ -58,7 +72,7 @@ const Scheduleform = ({ property_id }: { property_id: number }) => {
                                         className="ml-auto"
                                         required
                                         name="end"
-                                        type="datetime-local"
+                                        type="time"
                                         value={input.end}
                                         onChange={handleChange}
                                     />

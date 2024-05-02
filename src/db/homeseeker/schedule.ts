@@ -48,6 +48,7 @@ export async function getScheduleByID(
 	if (res.length === 1) {
 		return res[0];
 	}
+
 	return null;
 }
 
@@ -76,24 +77,13 @@ export async function createSchedule(
 	start: Date,
 	end: Date,
 ): Promise<number | null> {
-	try {
-		const params = {
-			property_id,
-			start,
-			end,
-		};
-		const [res] = await pool.execute<ResultSetHeader>(
-			`INSERT INTO bookings_db.hs_schedule (property_id, start, end)
+	const [res] = await pool.execute<ResultSetHeader>(
+		`INSERT INTO bookings_db.hs_schedule (property_id, start, end)
           VALUES (:property_id, :start, :end)`,
-			params,
-		);
+		{ property_id, start, end },
+	);
 
-		return res.insertId;
-	} catch (e) {
-		console.error(e);
-		return null;
-	}
-
+	return res.insertId;
 }
 
 /**

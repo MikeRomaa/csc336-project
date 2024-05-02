@@ -22,7 +22,7 @@ export async function getAppointmentsByUser(
 		INNER JOIN bookings_db.user AS U ON A.user_id = U.id
 		INNER JOIN bookings_db.hs_schedule AS S ON A.schedule_id = S.id
 		INNER JOIN bookings_db.hs_property AS P ON P.id = S.property_id
-		WHERE P.broker_id = :user_id`,
+		WHERE A.broker_id = :user_id`,
 		{ user_id },
 	);
 	return res;
@@ -32,6 +32,43 @@ export async function getAppointmentsByUser(
  * Retrieves upcoming appointments from a given user id.
  */
 export async function getUpcomingAppointmentsByUser(
+	user_id: number,
+): Promise<Appointment[]> {
+	const [res] = await pool.execute<Appointment[]>(
+		`SELECT A.start, A.end, P.address, P.zipcode, P.type, U.first_name, U.last_name
+		FROM bookings_db.hs_appointment AS A
+		INNER JOIN bookings_db.user AS U ON U.id = A.user_id
+		INNER JOIN bookings_db.hs_schedule AS S ON A.schedule_id = S.id
+		INNER JOIN bookings_db.hs_property AS P ON P.id = S.property_id
+		WHERE A.broker_id = :user_id
+		AND A.start > CURRENT_TIMESTAMP`,
+		{ user_id },
+	);
+	return res;
+}
+
+/**
+ * Retrieves all appointments from a given broker id.
+ */
+export async function getAppointmentsByBroker(
+	user_id: number,
+): Promise<Appointment[]> {
+	const [res] = await pool.execute<Appointment[]>(
+		`SELECT  A.start, A.end, P.address, P.zipcode, P.type, U.first_name, U.last_name
+		FROM bookings_db.hs_appointment AS A
+		INNER JOIN bookings_db.user AS U ON A.user_id = U.id
+		INNER JOIN bookings_db.hs_schedule AS S ON A.schedule_id = S.id
+		INNER JOIN bookings_db.hs_property AS P ON P.id = S.property_id
+		WHERE P.broker_id = :user_id`,
+		{ user_id },
+	);
+	return res;
+}
+
+/**
+ * Retrieves upcoming appointments from a given broker id.
+ */
+export async function getUpcomingAppointmentsByBroker(
 	user_id: number,
 ): Promise<Appointment[]> {
 	const [res] = await pool.execute<Appointment[]>(

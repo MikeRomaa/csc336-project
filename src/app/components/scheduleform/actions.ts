@@ -15,14 +15,6 @@ export async function makeSchedule(
 	end_time: Date,
 ): Promise<Schedule | string> {
 
-	// Errors checking
-	if (!start_time) {
-		return "Start time required.";
-	}
-	if (!end_time) {
-		return "End time required.";
-	}
-
 	// Schedules must be made 3 full days in advance
 	const today = new Date();
 	today.setDate(today.getDate() + 3);
@@ -48,11 +40,8 @@ export async function makeSchedule(
 	}
 
 	// Restrict the time to be on the same date
-	if (
-		start_time.getFullYear() !== end_time.getFullYear() ||
-		start_time.getMonth() !== end_time.getMonth() ||
-		start_time.getDate() !== end_time.getDate()
-	) {
+	// The day is always the same
+	if (start_time.getFullYear() !== end_time.getFullYear() || start_time.getMonth() !== end_time.getMonth()) {
 		return "Schedules are restricted to the same date.";
 	}
 
@@ -97,12 +86,12 @@ export async function makeSchedule(
 	return schedule;
 }
 
-export async function fetchPropertyData(propertyId: number) {
-	const propertyData = await getPropertyByID(propertyId);
+export async function fetchPropertyData(property_id: number) {
+	const propertyData = await getPropertyByID(property_id);
 	return propertyData;
 };
 
-export async function fetchPropertySchedules(propertyId: number) {
-	const propertySchedules = await getSchedulesByPropertyID(propertyId);
+export async function fetchPropertySchedules(property_id: number) {
+	const propertySchedules = await getSchedulesByPropertyID(property_id);
 	return propertySchedules;
 };

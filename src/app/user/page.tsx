@@ -8,12 +8,13 @@ import { useEffect, useState } from "react";
 import { User } from "@/db/auth";
 import { Appointment } from "@/db/homeseeker/appointment";
 import { Property } from "@/db/homeseeker/property";
-import { getUserProperties, getUserAppointments, fetchUserDetails } from "./actions";
+import { getUserProperties, getUserAppointments, fetchUserDetails, getPropertyAppointments } from "./actions";
 
 const Account: NextPage = () => {
     const user_id = Number(useSearchParams().get('user'));
     const [user, setUser] = useState<User | null>(null);
     const [properties, setProperties] = useState<Property[] | null>(null);
+    const [propertyAppointments, setpropertyAppointments] = useState<Appointment[] | null>(null);
     const [appointments, setAppointments] = useState<Appointment[] | null>(null);
 
     useEffect(() => {
@@ -22,10 +23,11 @@ const Account: NextPage = () => {
                 if (user_id) {
                     const userData = await fetchUserDetails();
                     const propertiesData = await getUserProperties(user_id);
+                    const propertyAppointmentData = await getPropertyAppointments(user_id);
                     const appointmentData = await getUserAppointments(user_id);
-                    console.log(appointmentData);
                     setUser(userData);
                     setProperties(propertiesData);
+                    setpropertyAppointments(propertyAppointmentData);
                     setAppointments(appointmentData);
                 }
             } catch (error) {
@@ -39,7 +41,7 @@ const Account: NextPage = () => {
         <div>
             {user ? (
                 <div className="flex flex-row gap-10 m-10">
-                    <div className="flex flex-col items-center justify-center w-1/2 pr-4">
+                    <div className="flex flex-col items-center justify-center pr-4">
                         <h1 className="mb-5 mt-5 text-tremor-title font-medium text-center">
                             Welcome, {user.first_name} {user.last_name}!
                         </h1>
@@ -76,11 +78,11 @@ const Account: NextPage = () => {
                             )}
                         </Card>
                     </div>
-                    <div className="w-1/2">
+                    <div>
                         <Card className="max-w-96 mx-auto overflow-y-auto flex-grow">
                             {appointments && appointments.length > 0 ? (
                                 <div className="flex flex-col items-center justify-center">
-                                    <h2 className="text-tremor-title font-medium text-center">Your Appointments:</h2>
+                                    <h2 className="text-tremor-title font-medium text-center">Appointments for your property:</h2>
                                     <ul>
                                         {appointments.map((appointment) => (
                                             <li key={appointment.id}>
@@ -100,6 +102,28 @@ const Account: NextPage = () => {
                             )}
                         </Card>
                     </div>
+                    <Card className="max-w-96 mx-auto overflow-y-auto flex-grow">
+                        {propertyAppointments && propertyAppointments.length > 0 ? (
+                            <div className="flex flex-col items-center justify-center">
+                                <h2 className="text-tremor-title font-medium text-center">Appointments for your property:</h2>
+                                <ul>
+                                    {propertyAppointments.map((appointment) => (
+                                        <li key={appointment.id}>
+                                            <Card className="p-5 w-100 mb-5">
+                                                <div className="mb-3 flex flex-row items-center gap-10">
+                                                    <p>Start time:{new Date(appointment.start).toLocaleString()}</p>
+                                                    <p>EndTime: {new Date(appointment.end).toLocaleString()}</p>
+                                                    <p>By: {appointment.user_id}</p>
+                                                </div>
+                                            </Card>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ) : (
+                            <p>No appointments made. Go checkout different properties!</p>
+                        )}
+                    </Card>
                 </div>
             ) : (
                 <div className="grid place-items-center h-screen">

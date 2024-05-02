@@ -22,7 +22,6 @@ const Viewproperty = () => {
             const propertyData = await fetchPropertyData(property_id);
             const userData = await fetchUserDetails();
             const scheduleData = await fetchSchedules(property_id);
-            console.log(scheduleData);
             setProperty(propertyData);
             setUser(userData);
             setSchedules(scheduleData);

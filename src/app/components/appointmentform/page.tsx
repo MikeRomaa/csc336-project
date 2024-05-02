@@ -45,6 +45,7 @@ const Appointmentform = ({ schedule_id }: { schedule_id: number }) => {
 				setError(output);
 			} else {
 				setError(null);
+				window.location.reload();
 			}
 		}
 	};
@@ -59,7 +60,7 @@ const Appointmentform = ({ schedule_id }: { schedule_id: number }) => {
 						</h1>
 						<div className="flex flex-col items-center justify-center">
 							<p>Start: {new Date(schedule.start).toLocaleString()}</p>
-							<p>End: {new Date(schedule.start).toLocaleString()}</p>
+							<p>End: {new Date(schedule.end).toLocaleString()}</p>
 						</div>
 						<form onSubmit={handleSubmit} className="flex flex-col just-center items-center">
 							<div className="mb-5 flex flex-row gap-3">

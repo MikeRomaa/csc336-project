@@ -21,7 +21,6 @@ export async function getProperties(): Promise<Property[]> {
 	const [res] = await pool.execute<Property[]>(
 		"SELECT * FROM bookings_db.hs_property",
 	);
-
 	return res;
 }
 
@@ -34,7 +33,6 @@ export async function getPropertiesByUser(user: number): Promise<Property[]> {
 		WHERE broker_id = :user`,
 		{ user }
 	);
-
 	return res;
 }
 
@@ -49,7 +47,6 @@ export async function getPropertiesByZipcode(
         WHERE zipcode = :zipcode`,
 		{ zipcode },
 	);
-
 	return res;
 }
 
@@ -65,7 +62,6 @@ export async function getPropertyByID(id: number): Promise<Property | null> {
 	if (res.length !== 1) {
 		return null;
 	}
-
 	return res[0];
 }
 
@@ -83,7 +79,26 @@ export async function getPropertyByAddress(
 	if (res.length === 1) {
 		return res[0];
 	}
+	return null;
+}
 
+/**
+ * Retrieve a property with given schedule
+ */
+export async function getPropertyBySchedule(
+	schedule_id: number,
+): Promise<Property | null> {
+	const [res] = await pool.execute<Property[]>(
+		`SELECT *
+		FROM bookings_db.hs_property AS P
+		INNER JOIN bookings_db.hs_schedule as S
+        ON S.property_id = P.id
+		WHERE S.id = :schedule_id`,
+		{ schedule_id },
+	);
+	if (res.length === 1) {
+		return res[0];
+	}
 	return null;
 }
 
@@ -109,10 +124,10 @@ export async function createProperty(
 			address,
 			zipcode,
 			type,
-			price: price !== undefined ? price : null, // Replace undefined with null
-			rooms: rooms !== undefined ? rooms : null, // Replace undefined with null
-			area: area !== undefined ? area : null, // Replace undefined with null
-			year_built: built !== undefined ? built : null, // Replace undefined with null
+			price: price !== undefined ? price : null,
+			rooms: rooms !== undefined ? rooms : null,
+			area: area !== undefined ? area : null,
+			year_built: built !== undefined ? built : null,
 		};
 
 		const [res] = await pool.execute<ResultSetHeader>(

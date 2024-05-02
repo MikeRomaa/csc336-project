@@ -1,13 +1,13 @@
 "use client"
 
 import Link from "next/link";
-import { getUserDetails } from "./action";
+import { fetchUserDetails } from "@/app/user/actions";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
 	const router = useRouter();
 	const handleAccount = async () => {
-		const response = await getUserDetails();
+		const response = await fetchUserDetails();
 		if (!response) {
 			router.push("/auth/sign-in");
 			return;

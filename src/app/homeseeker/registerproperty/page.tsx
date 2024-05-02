@@ -9,7 +9,7 @@ import {
 	registerProperty,
 } from "@/app/homeseeker/registerproperty/actions";
 
-const HomeRegister: NextPage = () => {
+const RegisterHome: NextPage = () => {
 	const [state, formAction] = useFormState<State, FormData>(
 		registerProperty,
 		{},
@@ -98,4 +98,4 @@ const HomeRegister: NextPage = () => {
 	);
 };
 
-export default HomeRegister;
+export default RegisterHome;

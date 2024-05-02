@@ -3,7 +3,8 @@
 import {
     createSchedule,
     Schedule,
-    getScheduleByID
+    getScheduleByID,
+    getSchedulesByPropertyID
 } from "@/db/homeseeker/schedule";
 import { cookies } from "next/headers";
 import { decryptCookie } from "@/app/cookies";
@@ -42,6 +43,17 @@ export async function makeSchedule(
 	
 
 	// Errors checking
+	if (!start_time) {
+		return "Start time required.";
+	}
+	if (!end_time) {
+		return "End time required.";
+	}
+
+	// Check if the start time and end time are valid
+	if (start_time > end_time) {
+		return "Start time must be earlier than end time.";
+	}
 	
 
 	// Get user currently logged in
@@ -51,11 +63,24 @@ export async function makeSchedule(
 		return "Not signed in";
 	}
 
-	/* Check if the address was already registered
-	const existingProperty = await getPropertyByAddress(address as string);
-	if (existingProperty !== null) {
-		return { formError: "Address already registered" };
-	}*/
+    //Check if this time slot interfeers with any other schedules for this house 
+    const propertySchedules = await getSchedulesByPropertyID(pid);
+    for(let i = 0; i < propertySchedules.length; i++){
+        if(propertySchedules[i].start <= start_time && propertySchedules[i].end >= start_time){
+            return "Schedule Time Overlaps With Existing Time"
+        }
+        else if(propertySchedules[i].start >= start_time && (propertySchedules[i].start <= end_time && propertySchedules[i].end >= end_time)){
+            return "Schedule Time Overlaps With Existing Time"
+        }
+    }
+
+    const duration = (end_time.getTime() - start_time.getTime()) / 60000;
+	if (duration < 20) {
+		return "Appointments must be at least 20 minutes long.";
+	}
+	if (duration > 180) {
+		return "Appointments must be less than 3 hours long.";
+	}
 
 	// Create the property
 	const schedule_id = await createSchedule(
@@ -77,4 +102,9 @@ export async function makeSchedule(
 export async function fetchPropertyData(propertyId: number) {
 	const propertyData = await getPropertyByID(propertyId);
 	return propertyData;
+};
+
+export async function fetchPropertySchedules(propertyId: number) {
+	const propertySchedules = await getSchedulesByPropertyID(propertyId);
+	return propertySchedules;
 };

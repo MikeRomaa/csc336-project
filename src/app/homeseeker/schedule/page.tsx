@@ -13,12 +13,15 @@ import {
 	registerProperty,
 } from "@/app/homeseeker/registerproperty/actions";
 import { getPropertyByID, Property } from "@/db/homeseeker/property";
-import  { makeSchedule, fetchPropertyData } from '@/app/homeseeker/schedule/actions';
+import  { makeSchedule, fetchPropertyData, fetchPropertySchedules } from '@/app/homeseeker/schedule/actions';
 
 const ScheduleForm: NextPage = () => {
     const propertyId = useSearchParams().get('pid');
 	const [property, setProperty] = useState<Property | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [render, setRender] = useState<boolean>(false);
+    const [scheduleList, setScheduleList] = useState<{ start: Date; end: Date; }[]>([]);
+
 	// Get the date input
 	const [input, setInput] = useState({
 		start: "",
@@ -38,8 +41,26 @@ const ScheduleForm: NextPage = () => {
 				console.log(error)
 			}
 		}
+
+        const fetchPropertySchedule = async () => {
+            try {
+                if(render){
+                    const schedules = await fetchPropertySchedules(Number(propertyId));
+                    for(let i = 0; i < schedules.length; i++){
+                        setScheduleList((prev) => [
+                            ...prev,
+                            { start: schedules[i].start, end: schedules[i].end },
+                        ]);
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            setRender(false);
+        }
+        fetchPropertySchedule();
 		fetchSchedule();
-	}, [propertyId])
+	}, [propertyId, render])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -60,6 +81,7 @@ const ScheduleForm: NextPage = () => {
 				setError(null);
 			}
             console.log(output);
+            setRender(true);
 		}
 	};
 
@@ -68,6 +90,24 @@ const ScheduleForm: NextPage = () => {
         <h1>Select Times You Are Avaliable To Meet: </h1>
         <h1>{property?.address}</h1>
         <h1>{property?.zipcode}</h1>
+        <h1>Current Times</h1>
+        {scheduleList.map((schedule) => (
+					<Card>
+						<div className="mb-3 flex items-center">
+							<div>
+								<p className="text-slate-600 text-sm">
+									Start time: {new Date(schedule.start).toLocaleString()}
+								</p>
+								<p className="text-slate-600 text-sm">
+									End time: {new Date(schedule.end).toLocaleString()}
+								</p>
+							</div>
+						</div>
+					</Card>
+		))}
+
+
+
         <div id='times-container'>
             <form  onSubmit={handleSubmit} className="flex flex-col just-center items-center">
             <label>Start</label>

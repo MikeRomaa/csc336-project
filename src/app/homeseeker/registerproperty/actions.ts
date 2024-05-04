@@ -26,8 +26,8 @@ export async function registerProperty(
 	const price = formData.get("price")
 		? Number(formData.get("price"))
 		: undefined;
-	const year = formData.get("year_built")
-		? Number(formData.get("year_built"))
+	const year = formData.get("built")
+		? Number(formData.get("built"))
 		: undefined;
 
 	// Errors checking

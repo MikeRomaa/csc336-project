@@ -8,7 +8,7 @@ CREATE TABLE hs_property (
     price       INT UNSIGNED NULL,
     rooms       INT UNSIGNED NULL,
     area        INT UNSIGNED NULL,
-    year_built  INT UNSIGNED NULL,
+    built       INT UNSIGNED NULL,
 
     PRIMARY KEY (id),
     FOREIGN KEY (broker_id)    REFERENCES user(id)  

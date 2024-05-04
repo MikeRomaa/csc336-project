@@ -34,21 +34,20 @@ const RegisterHome: NextPage = () => {
 						<div>
 							<TextInput
 								required
-								name="zipcode"
-								type="text"
-								placeholder="Zipcode"
-								error={!!state.fieldErrors?.zipcode}
-								errorMessage={state.fieldErrors?.zipcode}
-							/>
-						</div>
-						<div>
-							<TextInput
-								required
 								name="type"
 								type="text"
 								placeholder="House for sale"
 								error={!!state.fieldErrors?.type}
 								errorMessage={state.fieldErrors?.type}
+							/>
+						</div>
+						<div>
+							<NumberInput
+								required
+								name="zipcode"
+								placeholder="Zipcode"
+								error={!!state.fieldErrors?.zipcode}
+								errorMessage={state.fieldErrors?.zipcode}
 							/>
 						</div>
 						<div>
@@ -77,8 +76,8 @@ const RegisterHome: NextPage = () => {
 						</div>
 						<div>
 							<NumberInput
-								name="year-built"
-								placeholder="Year-built"
+								name="built"
+								placeholder="Year built"
 								error={!!state.fieldErrors?.year}
 								errorMessage={state.fieldErrors?.year}
 							/>

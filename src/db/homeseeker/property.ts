@@ -127,12 +127,12 @@ export async function createProperty(
 			price: price !== undefined ? price : null,
 			rooms: rooms !== undefined ? rooms : null,
 			area: area !== undefined ? area : null,
-			year_built: built !== undefined ? built : null,
+			built: built !== undefined ? built : null,
 		};
 
 		const [res] = await pool.execute<ResultSetHeader>(
-			`INSERT INTO bookings_db.hs_property (broker_id, address, zipcode, type, price, rooms, area, year_built)
-            VALUES (:broker_id, :address, :zipcode, :type, :price, :rooms, :area, :year_built)`,
+			`INSERT INTO bookings_db.hs_property (broker_id, address, zipcode, type, price, rooms, area, built)
+            VALUES (:broker_id, :address, :zipcode, :type, :price, :rooms, :area, :built)`,
 			params,
 		);
 		return res.insertId;
@@ -164,6 +164,16 @@ export async function updateProperty(
 	area?: number,
 	built?: number,
 ): Promise<void> {
+	const params = {
+		address,
+		zipcode,
+		type,
+		price: price !== undefined ? price : null,
+		rooms: rooms !== undefined ? rooms : null,
+		area: area !== undefined ? area : null,
+		built: built !== undefined ? built : null,
+		id
+	};
 	await pool.execute(
 		`UPDATE bookings_db.hs_property
         SET address = :address,
@@ -172,8 +182,8 @@ export async function updateProperty(
             price = :price,
             rooms = :rooms,
             area = :area,
-            year_built = :built
+            built = :built
         WHERE id = :id`,
-		{ address, zipcode, type, price, rooms, area, built, id },
+		params,
 	);
 }

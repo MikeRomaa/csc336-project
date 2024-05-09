@@ -52,7 +52,7 @@ export function getCurrentUser(): User | null {
 		return null;
 	}
 	const decryptedUser = decryptCookie(sessionCookie);
-	if (!decryptedUser || typeof decryptedUser.id !== 'number') {
+	if (!decryptedUser || typeof decryptedUser.id !== "number") {
 		return null;
 	}
 	return decryptedUser;

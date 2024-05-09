@@ -1,9 +1,8 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 
 const Navbar = () => {
-
 	return (
 		<nav className="bg-white border-b-4 border-black">
 			<ul className="flex flex-row justify-between items-center p-4">

@@ -31,7 +31,7 @@ export async function getPropertiesByUser(user: number): Promise<Property[]> {
 	const [res] = await pool.execute<Property[]>(
 		`SELECT id, broker_id, address, zipcode, type, price, rooms, area, built FROM bookings_db.hs_property
 		WHERE broker_id = :user`,
-		{ user }
+		{ user },
 	);
 	return res;
 }
@@ -172,7 +172,7 @@ export async function updateProperty(
 		rooms: rooms !== undefined ? rooms : null,
 		area: area !== undefined ? area : null,
 		built: built !== undefined ? built : null,
-		id
+		id,
 	};
 	await pool.execute(
 		`UPDATE bookings_db.hs_property

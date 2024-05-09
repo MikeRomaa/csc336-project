@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
+import { Schedule } from "@/db/homeseeker/schedule";
 import { Button, Card, TextInput } from "@tremor/react";
 import { useEffect, useState } from "react";
-import { makeAppointment, fetchScheduleData } from "./actions";
-import { Schedule } from "@/db/homeseeker/schedule";
+import { fetchScheduleData, makeAppointment } from "./actions";
 
 const Appointmentform = ({ schedule_id }: { schedule_id: number }) => {
 	const [schedule, setScheule] = useState<Schedule | null>(null);
@@ -22,11 +22,11 @@ const Appointmentform = ({ schedule_id }: { schedule_id: number }) => {
 					setScheule(data);
 				}
 			} catch (error) {
-				console.log(error)
+				console.log(error);
 			}
-		}
+		};
 		fetchSchedule();
-	}, [schedule_id])
+	}, [schedule_id]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -38,9 +38,11 @@ const Appointmentform = ({ schedule_id }: { schedule_id: number }) => {
 		if (schedule) {
 			const output = await makeAppointment(
 				schedule_id,
-				new Date(`${schedule.start.toISOString().split("T")[0]}T${input.start}`),
+				new Date(
+					`${schedule.start.toISOString().split("T")[0]}T${input.start}`,
+				),
 				new Date(`${schedule.start.toISOString().split("T")[0]}T${input.end}`),
-			)
+			);
 			if (typeof output === "string") {
 				setError(output);
 			} else {
@@ -62,7 +64,10 @@ const Appointmentform = ({ schedule_id }: { schedule_id: number }) => {
 							<p>Start: {new Date(schedule.start).toLocaleString()}</p>
 							<p>End: {new Date(schedule.end).toLocaleString()}</p>
 						</div>
-						<form onSubmit={handleSubmit} className="flex flex-col just-center items-center">
+						<form
+							onSubmit={handleSubmit}
+							className="flex flex-col just-center items-center"
+						>
 							<div className="mb-5 flex flex-row gap-3">
 								<div>
 									<input
@@ -95,8 +100,8 @@ const Appointmentform = ({ schedule_id }: { schedule_id: number }) => {
 						</form>
 					</Card>
 				</>
-			) : (null)}
-		</div >
+			) : null}
+		</div>
 	);
 };
 

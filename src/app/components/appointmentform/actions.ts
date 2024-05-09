@@ -1,13 +1,13 @@
 "use server";
 
+import { getCurrentUser } from "@/app/cookies";
 import {
 	Appointment,
 	createAppointment,
-	getAppointmentsBySchedule,
 	getAppointmentByID,
+	getAppointmentsBySchedule,
 } from "@/db/homeseeker/appointment";
 import { getScheduleByID } from "@/db/homeseeker/schedule";
-import { getCurrentUser } from "@/app/cookies";
 
 export async function makeAppointment(
 	schedule_id: number,
@@ -39,10 +39,10 @@ export async function makeAppointment(
 		return "Error retreiving schedule";
 	}
 	if (schedule.start > start_time) {
-		return "Start time must be within scheduled times."
+		return "Start time must be within scheduled times.";
 	}
 	if (schedule.end < end_time) {
-		return "End time must be within scheduled times."
+		return "End time must be within scheduled times.";
 	}
 
 	// Make sure the duration is between 20 and 120 mintues
@@ -90,4 +90,4 @@ export async function makeAppointment(
 export async function fetchScheduleData(schedule_id: number) {
 	const scheduleData = await getScheduleByID(schedule_id);
 	return scheduleData;
-};
+}

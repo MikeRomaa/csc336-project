@@ -20,7 +20,6 @@ export async function getSchedules(): Promise<Schedule[]> {
 	return res;
 }
 
-
 /**
  * Retrieves all schedules made for a certain property from database.
  */
@@ -37,12 +36,12 @@ export async function getSchedulesByPropertyID(
 }
 
 export async function getScheduleByID(
-	schedule_id: number
+	schedule_id: number,
 ): Promise<Schedule | null> {
 	const [res] = await pool.execute<Schedule[]>(
 		`SELECT start, end FROM bookings_db.hs_schedule
         WHERE id = :schedule_id`,
-		{ schedule_id }
+		{ schedule_id },
 	);
 
 	if (res.length === 1) {

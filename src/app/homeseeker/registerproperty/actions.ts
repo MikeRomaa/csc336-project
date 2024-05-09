@@ -1,12 +1,12 @@
 "use server";
 
+import { getCurrentUser } from "@/app/cookies";
 import {
 	Property,
 	createProperty,
-	getPropertyByID,
 	getPropertyByAddress,
+	getPropertyByID,
 } from "@/db/homeseeker/property";
-import { getCurrentUser } from "@/app/cookies";
 import { FormStatus } from "@/types";
 
 export type State = FormStatus<Property>;
@@ -63,7 +63,7 @@ export async function registerProperty(
 	// Get user currently logged in
 	const broker = getCurrentUser();
 	if (!broker) {
-		return { formError: "Failed to get user" }
+		return { formError: "Failed to get user" };
 	}
 
 	// Check if the address was already registered

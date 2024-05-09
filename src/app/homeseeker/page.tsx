@@ -1,8 +1,8 @@
-import { Button, Card } from "@tremor/react";
-import Link from "next/link";
-import { NextPage } from "next";
-import { getProperties } from "@/db/homeseeker/property";
 import { getCurrentUser } from "@/app/cookies";
+import { getProperties } from "@/db/homeseeker/property";
+import { Button, Card } from "@tremor/react";
+import { NextPage } from "next";
+import Link from "next/link";
 
 export async function filterPropertiesByUser() {
 	const properties = await getProperties();
@@ -12,8 +12,8 @@ export async function filterPropertiesByUser() {
 		return properties;
 	}
 	const filteredProperties = properties.filter((property) => {
-		return property.broker_id !== user.id
-	})
+		return property.broker_id !== user.id;
+	});
 	return filteredProperties;
 }
 
@@ -37,7 +37,12 @@ const Home: NextPage = async () => {
 							</div>
 							<div className="ml-auto">
 								<Button>
-									<Link href={`/homeseeker/viewproperty/?id=${property.id}`} className="text-white visited:text-white">Book Now</Link>
+									<Link
+										href={`/homeseeker/viewproperty/?id=${property.id}`}
+										className="text-white visited:text-white"
+									>
+										Book Now
+									</Link>
 								</Button>
 							</div>
 						</div>
@@ -47,6 +52,6 @@ const Home: NextPage = async () => {
 			</div>
 		</div>
 	);
-}
+};
 
 export default Home;

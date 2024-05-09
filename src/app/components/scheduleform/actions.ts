@@ -1,20 +1,19 @@
 "use server";
 
-import {
-	createSchedule,
-	Schedule,
-	getScheduleByID,
-	getSchedulesByPropertyID
-} from "@/db/homeseeker/schedule";
 import { getCurrentUser } from "@/app/cookies";
 import { getPropertyByID } from "@/db/homeseeker/property";
+import {
+	Schedule,
+	createSchedule,
+	getScheduleByID,
+	getSchedulesByPropertyID,
+} from "@/db/homeseeker/schedule";
 
 export async function makeSchedule(
 	property_id: number,
 	start_time: Date,
-	end_time: Date
+	end_time: Date,
 ): Promise<Schedule | string> {
-
 	// Schedules must be made 3 full days in advance
 	const today = new Date();
 	today.setDate(today.getDate() + 3);
@@ -32,16 +31,21 @@ export async function makeSchedule(
 
 	// Make sure schedules are made from 8am to 6pm
 	// Needs UTC in order to work which is 4 extra hours from EST
-	if (start_time.getHours() < 12) { // 4 + 8 = 12
+	if (start_time.getHours() < 12) {
+		// 4 + 8 = 12
 		return "Start time must be after 8:00 am.";
 	}
-	if (end_time.getHours() >= 22) { // 4 + 18 = 22
+	if (end_time.getHours() >= 22) {
+		// 4 + 18 = 22
 		return "End time must be before 6:00 pm.";
 	}
 
 	// Restrict the time to be on the same date
 	// The day is always the same
-	if (start_time.getFullYear() !== end_time.getFullYear() || start_time.getMonth() !== end_time.getMonth()) {
+	if (
+		start_time.getFullYear() !== end_time.getFullYear() ||
+		start_time.getMonth() !== end_time.getMonth()
+	) {
 		return "Schedules are restricted to the same date.";
 	}
 
@@ -57,7 +61,7 @@ export async function makeSchedule(
 		return "Not signed in.";
 	}
 
-	//Check if this time slot interfers with any other schedules for this house 
+	//Check if this time slot interfers with any other schedules for this house
 	const propertySchedules = await getSchedulesByPropertyID(property_id);
 	for (let i = 0; i < propertySchedules.length; i++) {
 		if (propertySchedules[i].start > start_time) {
@@ -92,9 +96,9 @@ export async function makeSchedule(
 export async function fetchPropertyData(property_id: number) {
 	const propertyData = await getPropertyByID(property_id);
 	return propertyData;
-};
+}
 
 export async function fetchPropertySchedules(property_id: number) {
 	const propertySchedules = await getSchedulesByPropertyID(property_id);
 	return propertySchedules;
-};
+}

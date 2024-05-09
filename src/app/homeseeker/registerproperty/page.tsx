@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, TextInput, NumberInput } from "@tremor/react";
+import { Button, Card, NumberInput, TextInput } from "@tremor/react";
 import { NextPage } from "next";
 import { useFormState } from "react-dom";
 

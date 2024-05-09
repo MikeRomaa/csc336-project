@@ -1,6 +1,6 @@
+import { getSchedules } from "@/db/homeseeker/schedule";
 import { Button, Card } from "@tremor/react";
 import Link from "next/link";
-import { getSchedules } from "@/db/homeseeker/schedule";
 
 export default async function Home() {
 	const schedules = await getSchedules();
@@ -21,9 +21,12 @@ export default async function Home() {
 									End time: {new Date(schedule.end).toLocaleString()}
 								</p>
 							</div>
-							<Link href={{
-								pathname: '/homeseeker/makeappointment', query: { schedule: schedule.id }
-							}}>
+							<Link
+								href={{
+									pathname: "/homeseeker/makeappointment",
+									query: { schedule: schedule.id },
+								}}
+							>
 								<Button className="ml-auto">Make an appointment!</Button>
 							</Link>
 						</div>

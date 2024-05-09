@@ -144,7 +144,7 @@ export async function getAppointmentByID(
 	id: number,
 ): Promise<Appointment | null> {
 	const [res] = await pool.execute<Appointment[]>(
-		"SELECT * FROM bookings_db.hs_appointment WHERE id = :id",
+		"SELECT start, end, user_id FROM bookings_db.hs_appointment WHERE id = :id",
 		{ id },
 	);
 	if (res.length !== 1) {

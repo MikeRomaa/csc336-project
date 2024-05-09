@@ -14,7 +14,7 @@ export interface Schedule extends RowDataPacket {
  */
 export async function getSchedules(): Promise<Schedule[]> {
 	const [res] = await pool.execute<Schedule[]>(
-		"SELECT * FROM bookings_db.hs_schedule",
+		"SELECT id, property_id, start, end FROM bookings_db.hs_schedule",
 	);
 
 	return res;
@@ -28,7 +28,7 @@ export async function getSchedulesByPropertyID(
 	property_id: number,
 ): Promise<Schedule[]> {
 	const [res] = await pool.execute<Schedule[]>(
-		`SELECT * FROM bookings_db.hs_schedule
+		`SELECT start, end FROM bookings_db.hs_schedule
         WHERE property_id = :property_id`,
 		{ property_id },
 	);
@@ -40,7 +40,7 @@ export async function getScheduleByID(
 	schedule_id: number
 ): Promise<Schedule | null> {
 	const [res] = await pool.execute<Schedule[]>(
-		`SELECT * FROM bookings_db.hs_schedule
+		`SELECT start, end FROM bookings_db.hs_schedule
         WHERE id = :schedule_id`,
 		{ schedule_id }
 	);
@@ -59,7 +59,7 @@ export async function getUpcomingSchedules(
 	property_id: number,
 ): Promise<Schedule[]> {
 	const [res] = await pool.execute<Schedule[]>(
-		`SELECT * FROM bookings_db.hs_schedule WHERE property_id = :property_id
+		`SELECT start, end FROM bookings_db.hs_schedule WHERE property_id = :property_id
         AND start > CURRENT_TIMESTAMP`,
 		{ property_id },
 	);

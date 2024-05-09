@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, Card } from "@tremor/react";
+import { Button, Card, TextInput } from "@tremor/react";
 import { useEffect, useState } from "react";
 import { makeAppointment, fetchScheduleData } from "./actions";
 import { Schedule } from "@/db/homeseeker/schedule";
@@ -69,7 +69,6 @@ const Appointmentform = ({ schedule_id }: { schedule_id: number }) => {
 										required
 										name="start"
 										type="time"
-										placeholder="Select start time in the form 00:00"
 										value={input.start}
 										onChange={handleChange}
 									/>
@@ -79,7 +78,6 @@ const Appointmentform = ({ schedule_id }: { schedule_id: number }) => {
 										required
 										name="end"
 										type="time"
-										placeholder="Select end time in the form 00:00"
 										value={input.end}
 										onChange={handleChange}
 									/>

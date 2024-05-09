@@ -12,7 +12,7 @@ import { getPropertyByID } from "@/db/homeseeker/property";
 export async function makeSchedule(
 	property_id: number,
 	start_time: Date,
-	end_time: Date,
+	end_time: Date
 ): Promise<Schedule | string> {
 
 	// Schedules must be made 3 full days in advance
@@ -54,17 +54,20 @@ export async function makeSchedule(
 	// Get user currently logged in
 	const user = getCurrentUser();
 	if (!user) {
-		return "Not signed in";
+		return "Not signed in.";
 	}
 
 	//Check if this time slot interfers with any other schedules for this house 
 	const propertySchedules = await getSchedulesByPropertyID(property_id);
 	for (let i = 0; i < propertySchedules.length; i++) {
-		if (propertySchedules[i].start <= start_time && propertySchedules[i].end >= start_time) {
-			return "Schedule times overlap with existing time";
-		}
-		else if (propertySchedules[i].start >= start_time && (propertySchedules[i].start <= end_time && propertySchedules[i].end >= end_time)) {
-			return "Schedule times overlap With existing time";
+		if (propertySchedules[i].start > start_time) {
+			if (propertySchedules[i].start < end_time) {
+				return "Schedule times overlap with existing time.";
+			}
+		} else {
+			if (propertySchedules[i].end > start_time) {
+				return "Schedule times overlap with existing time.";
+			}
 		}
 	}
 
@@ -75,7 +78,7 @@ export async function makeSchedule(
 		end_time as Date,
 	);
 	if (!schedule_id) {
-		return "Failed to make schedule";
+		return "Failed to make schedule.";
 	}
 
 	// Get the schedule

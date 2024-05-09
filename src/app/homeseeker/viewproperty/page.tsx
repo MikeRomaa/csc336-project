@@ -1,7 +1,7 @@
 "use client"
 
 import { Button, Card } from "@tremor/react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Property } from "@/db/homeseeker/property";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import Editproperty from "@/app/components/editpropertyform/page";
 
 
 const Viewproperty = () => {
+    const router = useRouter();
     const property_id = Number(useSearchParams().get('id'));
     const [user, setUser] = useState<User | null>(null);
     const [property, setProperty] = useState<Property | null>(null);
@@ -30,6 +31,10 @@ const Viewproperty = () => {
         }
         fetchDetails()
     }, [property_id])
+
+    const handleFormSubmit = () => {
+        router.refresh();
+    }
 
     return (
         <div className="container">
@@ -69,7 +74,7 @@ const Viewproperty = () => {
                 ) : (null)}
             </div>
             {user && user.id === property?.broker_id && <Editproperty property_id={property_id} property={property} />}
-            {user && user.id === property?.broker_id && <Scheduleform property_id={property_id} />}
+            {user && user.id === property?.broker_id && <Scheduleform property_id={property_id} onSubmit={handleFormSubmit} />}
         </div>
     );
 };

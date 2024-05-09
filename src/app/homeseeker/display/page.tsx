@@ -22,9 +22,7 @@ export default async function Home() {
 								</p>
 							</div>
 							<Link href={{
-								pathname: '/homeseeker/makeappointment', query: {
-									schedule: schedule.id
-								}
+								pathname: '/homeseeker/makeappointment', query: { schedule: schedule.id }
 							}}>
 								<Button className="ml-auto">Make an appointment!</Button>
 							</Link>

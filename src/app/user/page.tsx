@@ -11,31 +11,34 @@ import { Property } from "@/db/homeseeker/property";
 import { getUserProperties, getUserAppointments, fetchUserDetails, getPropertyAppointments } from "./actions";
 
 const Account: NextPage = () => {
-    const user_id = Number(useSearchParams().get('user'));
     const [user, setUser] = useState<User | null>(null);
     const [properties, setProperties] = useState<Property[] | null>(null);
     const [propertyAppointments, setpropertyAppointments] = useState<Appointment[] | null>(null);
     const [appointments, setAppointments] = useState<Appointment[] | null>(null);
 
     useEffect(() => {
+        const fetchCurrentUser = async () => {
+            const userData = await fetchUserDetails();
+            setUser(userData);
+        }
+        fetchCurrentUser();
+    }, [])
+
+    useEffect(() => {
         const fetchDetails = async () => {
             try {
-                if (user_id) {
-                    const userData = await fetchUserDetails();
-                    const propertiesData = await getUserProperties(user_id);
-                    const propertyAppointmentData = await getPropertyAppointments(user_id);
-                    const appointmentData = await getUserAppointments(user_id);
-                    setUser(userData);
-                    setProperties(propertiesData);
-                    setpropertyAppointments(propertyAppointmentData);
-                    setAppointments(appointmentData);
-                }
+                const propertiesData = await getUserProperties(Number(user?.id));
+                const propertyAppointmentData = await getPropertyAppointments(Number(user?.id));
+                const appointmentData = await getUserAppointments(Number(user?.id));
+                setProperties(propertiesData);
+                setpropertyAppointments(propertyAppointmentData);
+                setAppointments(appointmentData);
             } catch (error) {
                 console.log(error)
             }
         }
         fetchDetails();
-    }, [user_id])
+    }, [user])
 
     return (
         <div>
@@ -52,12 +55,12 @@ const Account: NextPage = () => {
                         <Card className="mx-auto h-96 overflow-y-auto">
                             {properties && properties.length > 0 ? (
                                 <div className="flex flex-col items-center justify-center">
-                                    <h2 className="text-tremor-title font-medium text-center">Your Properties:</h2>
+                                    <h2 className="text-tremor-title font-medium text-center mt-1">Your Properties:</h2>
                                     <ul>
                                         {properties.map((property) => (
                                             <li key={property.id}>
                                                 <Card className="p-5 w-100 mb-5">
-                                                    <Link href={`/homeseeker/viewproperty?id=${property.id}`} className="visited:text-black">
+                                                    <Link href={`/homeseeker/viewproperty?id=${property.id}`} className="text-black visited:text-black">
                                                         <div className="mb-3 flex flex-row items-center gap-10">
                                                             <h2 className="text-tremor-title font-medium">
                                                                 Address: {property.address}
@@ -121,14 +124,14 @@ const Account: NextPage = () => {
                                 </ul>
                             </div>
                         ) : (
-                            <p>No appointments made. Go checkout different properties!</p>
+                            <p>No upcoming appointments.</p>
                         )}
                     </Card>
                 </div>
             ) : (
                 <div className="grid place-items-center h-screen">
                     <Button>
-                        <Link href="/auth/sign-in" className="color:white visited:text-white">
+                        <Link href="/auth/sign-in" className="text:white visited:text-white">
                             <span>Please sign in to view your account!</span>
                         </Link>
                     </Button>

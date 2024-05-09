@@ -19,7 +19,7 @@ export interface Property extends RowDataPacket {
  */
 export async function getProperties(): Promise<Property[]> {
 	const [res] = await pool.execute<Property[]>(
-		"SELECT * FROM bookings_db.hs_property",
+		"SELECT id, broker_id, address, zipcode, type, price, rooms, area, built FROM bookings_db.hs_property",
 	);
 	return res;
 }
@@ -29,7 +29,7 @@ export async function getProperties(): Promise<Property[]> {
  */
 export async function getPropertiesByUser(user: number): Promise<Property[]> {
 	const [res] = await pool.execute<Property[]>(
-		`SELECT * FROM bookings_db.hs_property
+		`SELECT id, broker_id, address, zipcode, type, price, rooms, area, built FROM bookings_db.hs_property
 		WHERE broker_id = :user`,
 		{ user }
 	);
@@ -43,7 +43,7 @@ export async function getPropertiesByZipcode(
 	zipcode: number,
 ): Promise<Property[]> {
 	const [res] = await pool.execute<Property[]>(
-		`SELECT * FROM bookings_db.hs_property
+		`SELECT id, broker_id, address, zipcode, type, price, rooms, area, built FROM bookings_db.hs_property
         WHERE zipcode = :zipcode`,
 		{ zipcode },
 	);
@@ -55,7 +55,7 @@ export async function getPropertiesByZipcode(
  */
 export async function getPropertyByID(id: number): Promise<Property | null> {
 	const [res] = await pool.execute<Property[]>(
-		`SELECT * FROM bookings_db.hs_property
+		`SELECT id, broker_id, address, zipcode, type, price, rooms, area, built FROM bookings_db.hs_property
         WHERE id = :id`,
 		{ id },
 	);
@@ -72,7 +72,7 @@ export async function getPropertyByAddress(
 	address: string,
 ): Promise<Property | null> {
 	const [res] = await pool.execute<Property[]>(
-		`SELECT * FROM bookings_db.hs_property
+		`SELECT id, broker_id, address, zipcode, type, price, rooms, area, built FROM bookings_db.hs_property
         WHERE address = :address`,
 		{ address },
 	);
@@ -89,7 +89,7 @@ export async function getPropertyBySchedule(
 	schedule_id: number,
 ): Promise<Property | null> {
 	const [res] = await pool.execute<Property[]>(
-		`SELECT *
+		`SELECT P.broker_id, P.address, P.zipcode, P.type, P.price, P.rooms, P.area, P.built, S.start, S.end
 		FROM bookings_db.hs_property AS P
 		INNER JOIN bookings_db.hs_schedule as S
         ON S.property_id = P.id

@@ -1,19 +1,8 @@
 "use client"
 
 import Link from "next/link";
-import { fetchUserDetails } from "@/app/user/actions";
-import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-	const router = useRouter();
-	const handleAccount = async () => {
-		const response = await fetchUserDetails();
-		if (!response) {
-			router.push("/auth/sign-in");
-			return;
-		}
-		router.push(`/user?user=${response.id}`)
-	}
 
 	return (
 		<nav className="bg-white border-b-4 border-black">
@@ -34,9 +23,9 @@ const Navbar = () => {
 					</Link>
 				</li>
 				<li>
-					<button onClick={handleAccount}>
+					<Link href="/user">
 						<span className="text-black">Account</span>
-					</button>
+					</Link>
 				</li>
 				<li>
 					<Link href="/auth/sign-in">

@@ -26,7 +26,7 @@ export async function getServices(): Promise<Service[]> {
         FROM bookings_db.service AS s
         JOIN bookings_db.user AS u
             ON s.admin_id = u.id
-        WHERE s.active = true`
+        WHERE s.active = true`,
   );
 
   return res;
@@ -42,12 +42,12 @@ export async function createService(
   admin_id: number,
   timezone: string,
   duration: number,
-  description?: string
+  description?: string,
 ): Promise<number> {
   const [res] = await pool.execute<ResultSetHeader>(
     `INSERT INTO bookings_db.service (name, admin_id, timezone, duration, description)
         VALUES (:name, :admin_id, :timezone, :duration, :description)`,
-    { name, admin_id, timezone, duration, description }
+    { name, admin_id, timezone, duration, description },
   );
 
   return res.insertId;

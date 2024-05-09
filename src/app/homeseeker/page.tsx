@@ -26,7 +26,7 @@ const Home: NextPage = async () => {
 			<div className="grid grid-cols-2 gap-5">
 				{properties.map((property) => (
 					<Card key={property.id}>
-						<div className="mb-3 flex items-center">
+						<div className="mb-3 flex flex-row items-center">
 							<div>
 								<h2 className="text-tremor-title font-medium">
 									{property.address}
@@ -35,9 +35,11 @@ const Home: NextPage = async () => {
 									Offered by {property.zipcode}
 								</p>
 							</div>
-							<Button>
-								<Link href={`/homeseeker/viewproperty/?id=${property.id}`} className="text-white visited:text-white">Book Now</Link>
-							</Button>
+							<div className="ml-auto">
+								<Button>
+									<Link href={`/homeseeker/viewproperty/?id=${property.id}`} className="text-white visited:text-white">Book Now</Link>
+								</Button>
+							</div>
 						</div>
 						<p>{property.type}</p>
 					</Card>

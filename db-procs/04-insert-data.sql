@@ -21,7 +21,7 @@ VALUES (1, 3, '10:00', '19:00');
 INSERT INTO schedule (service_id, weekday, start, end)
 VALUES (1, 4, '7:30', '16:00');
 
-INSERT INTO hs_property (id, broker_id, address, zipcode, type, price, rooms, area, year_built) 
+INSERT INTO hs_property (id, broker_id, address, zipcode, type, price, rooms, area, built) 
 VALUES 
     (1, 1, '999 St', '12345', 'House', 250000, 4, 2000, 1995),
     (2, 1, '123 Main St', '54321', 'Apartment', 150000, 2, 1200, 2000),

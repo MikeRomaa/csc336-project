@@ -31,11 +31,14 @@ const Home: NextPage = async () => {
 					<Card key={property.id}>
 						<div className="mb-3 flex flex-row items-center">
 							<div>
-								<h2 className="text-tremor-title font-medium">
-									{property.address}
+							<h2 className="text-tremor-title font-medium">
+									{property.address}, {property.zipcode}
 								</h2>
-								<p className="text-slate-600 text-sm">
-									Offered by {property.zipcode}
+								<p className="text-slate-600 text-med">
+									Priced at ${property.price?.toLocaleString()}
+								</p>
+								<p className="text-slate-600 text-med">
+									Property Type: {property.type}
 								</p>
 							</div>
 							<div className="ml-auto">

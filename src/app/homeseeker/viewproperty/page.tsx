@@ -205,7 +205,7 @@ const ViewProperty: NextPage = () => {
 					)}
 					{user && user.id === property?.broker_id && (
 						<div className="mt-5">
-							<ScheduleForm property_id={property_id} />
+							<ScheduleForm property_id={property_id} onSubmit={() => {}} />
 						</div>
 					)}
 				</div>

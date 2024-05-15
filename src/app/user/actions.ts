@@ -3,11 +3,16 @@
 import { getCurrentUser } from "@/app/cookies";
 import { User } from "@/db/auth";
 import {
-	getUpcomingAppointmentsByUser,
 	getUpcomingAppointmentsByBroker,
+	getUpcomingAppointmentsByUser,
 } from "@/db/homeseeker/appointment";
 import { getPropertiesByUser } from "@/db/homeseeker/property";
-import { getTransactionsByPayee, getTransactionsByRecipient, GetBillByUserID, GetPaymentByUserID } from "@/db/transaction";
+import {
+	GetBillByUserID,
+	GetPaymentByUserID,
+	getTransactionsByPayee,
+	getTransactionsByRecipient,
+} from "@/db/transaction";
 
 export async function getUserProperties(user_id: number) {
 	return await getPropertiesByUser(user_id);
@@ -38,6 +43,6 @@ export async function getAmount(user_id: number) {
 	const payments = GetPaymentByUserID(user_id);
 	return {
 		yourAmount: bills,
-		otherAmount: payments
-	}
+		otherAmount: payments,
+	};
 }

@@ -3,24 +3,20 @@
 import Link from "next/link";
 import type React from "react";
 
-import { fetchUserDetails } from "./actions"
-import { useEffect, useState } from "react";
 import type { User } from "@/db/auth";
-
-
-
+import { useEffect, useState } from "react";
+import { fetchUserDetails } from "./actions";
 
 export const Navbar: React.FC = () => {
-	const [currUser, setUser] = useState<null | User>(null)
+	const [currUser, setUser] = useState<null | User>(null);
 	useEffect(() => {
 		async function user() {
-			const u = await fetchUserDetails()
-			setUser(u)
-			console.log(u)
+			const u = await fetchUserDetails();
+			setUser(u);
+			console.log(u);
 		}
-		user()
-
-	}, [])
+		user();
+	}, []);
 	return (
 		<nav className="bg-white border-b-4 border-black">
 			<ul className="flex flex-row justify-between items-center p-4">
@@ -44,20 +40,20 @@ export const Navbar: React.FC = () => {
 						<span className="text-black">Account</span>
 					</Link>
 				</li>
-				{!currUser ?
+				{!currUser ? (
 					<li>
 						<Link href="/auth/sign-in">
 							<span className="text-black">Login</span>
 						</Link>
 					</li>
-					:
+				) : (
 					<li>
 						<Link href="/">
 							<span className="text-black">Logout</span>
 						</Link>
 					</li>
-				}
+				)}
 			</ul>
 		</nav>
-	)
+	);
 };

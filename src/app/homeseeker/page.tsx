@@ -26,13 +26,15 @@ const Home: NextPage = async () => {
 	return (
 		<div className="container mx-auto py-20">
 			<h1 className="mb-5 text-tremor-metric font-medium">Properties</h1>
-			<Link href={"/homeseeker/registerproperty"}>Register your property here!</Link>
+			<Link href={"/homeseeker/registerproperty"}>
+				Register your property here!
+			</Link>
 			<div className="grid grid-cols-2 gap-5">
 				{properties.map((property) => (
 					<Card key={property.id}>
 						<div className="mb-3 flex flex-row items-center">
 							<div>
-							<h2 className="text-tremor-title font-medium">
+								<h2 className="text-tremor-title font-medium">
 									{property.address}, {property.zipcode}
 								</h2>
 								<p className="text-slate-600 text-med">

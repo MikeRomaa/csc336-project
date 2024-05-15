@@ -10,24 +10,24 @@ import {
 import {
 	Schedule,
 	createSchedule,
+	deleteSchedule,
 	getScheduleByID,
 	getSchedulesByPropertyID,
-	deleteSchedule,
 } from "@/db/homeseeker/schedule";
 
 export async function deletePropertyById(id: number): Promise<boolean> {
-    try {
-        const schedules = await getSchedulesByPropertyID(id);
-        for (const schedule of schedules) {
-            await deleteSchedule(schedule.id);
-        }
+	try {
+		const schedules = await getSchedulesByPropertyID(id);
+		for (const schedule of schedules) {
+			await deleteSchedule(schedule.id);
+		}
 
-        await deleteProperty(id);
-        return true;
-    } catch (error) {
-        console.error("Failed to delete property and schedules:", error);
-        return false;
-    }
+		await deleteProperty(id);
+		return true;
+	} catch (error) {
+		console.error("Failed to delete property and schedules:", error);
+		return false;
+	}
 }
 
 export async function updatePropertyDetails(
@@ -45,7 +45,10 @@ export async function updatePropertyDetails(
 		if (!address) {
 			return "Address is required";
 		}
-		if (!type?.toLocaleLowerCase()?.includes("sale") && !type?.toLocaleLowerCase().includes("rent")) {
+		if (
+			!type?.toLocaleLowerCase()?.includes("sale") &&
+			!type?.toLocaleLowerCase().includes("rent")
+		) {
 			return "Type must include for sale or for rent.";
 		}
 		if (rooms && rooms < 1) {

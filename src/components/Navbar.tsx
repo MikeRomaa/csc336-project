@@ -8,9 +8,6 @@ import { useEffect, useState } from "react";
 import type { User } from "@/db/auth";
 import { Menu } from '@headlessui/react'
 
-
-
-
 export const Navbar: React.FC = () => {
 	const [currUser, setUser] = useState<null | User>(null)
 	useEffect(() => {
@@ -30,9 +27,22 @@ export const Navbar: React.FC = () => {
 					</Link>
 				</li>
 				<li>
-					<Link href="/homeseeker">
-						<span className="text-black">Homeseeker</span>
-					</Link>
+					<Menu>
+						<Menu.Button>HomeSeeker</Menu.Button>
+						<Menu.Items className="absolute bg-white border-2 rounded-md mt-2 shadow-xl z-10">
+							<Menu.Item  >
+								<Link href="/homeseeker">
+									<div className="text-black  text-sm  border-stone-950 min-full m-3">Book Property</div>
+									<hr />
+								</Link>
+							</Menu.Item>
+							<Menu.Item >
+								<Link href="/homeseeker/registerproperty">
+									<div className="text-black text-sm m-3 ">Register Property</div>
+								</Link>
+							</Menu.Item>
+						</Menu.Items>
+					</Menu>
 				</li>
 				<li>
 					<Menu>

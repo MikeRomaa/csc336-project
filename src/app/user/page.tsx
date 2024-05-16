@@ -1,5 +1,6 @@
 "use client";
 
+import { describe } from "node:test";
 import { User } from "@/db/auth";
 import { Appointment } from "@/db/homeseeker/appointment";
 import { Property } from "@/db/homeseeker/property";
@@ -17,7 +18,6 @@ import {
 	getUserAppointments,
 	getUserProperties,
 } from "./actions";
-import { describe } from "node:test";
 
 const Account: NextPage = () => {
 	const [user, setUser] = useState<User | null>(null);
@@ -30,7 +30,7 @@ const Account: NextPage = () => {
 	const [payments, setPayments] = useState<Transaction[] | null>(null);
 	const [amount, setAmount] = useState({
 		owned: 0,
-		earned: 0
+		earned: 0,
 	});
 
 	useEffect(() => {
@@ -45,7 +45,9 @@ const Account: NextPage = () => {
 		const fetchDetails = async () => {
 			try {
 				const propertiesData = await getUserProperties(Number(user?.id));
-				const propertyAppointmentsData = await getPropertyAppointments(Number(user?.id));
+				const propertyAppointmentsData = await getPropertyAppointments(
+					Number(user?.id),
+				);
 				const appointmentsData = await getUserAppointments(Number(user?.id));
 				const transactionsData = await getPayeePayments(Number(user?.id));
 				const paymentsData = await getRecipientPayments(Number(user?.id));
@@ -61,7 +63,7 @@ const Account: NextPage = () => {
 			}
 		};
 		fetchDetails();
-	}, [user, amount]);
+	}, [user]);
 
 	return (
 		<div>
@@ -98,9 +100,7 @@ const Account: NextPage = () => {
 												<div>
 													<h2>Your Anticipated Payments:</h2>
 													{payments.map((payment) => (
-														<div key={payment.id}>
-															{payment.description}
-														</div>
+														<div key={payment.id}>{payment.description}</div>
 													))}
 												</div>
 											) : (

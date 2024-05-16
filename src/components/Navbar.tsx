@@ -39,7 +39,9 @@ export const Navbar: React.FC = () => {
 							</Menu.Item>
 							<Menu.Item>
 								<Link href="/homeseeker/registerproperty">
-									<div className="text-black text-sm m-3 ">Register Property</div>
+									<div className="text-black text-sm m-3 ">
+										Register Property
+									</div>
 								</Link>
 							</Menu.Item>
 						</Menu.Items>

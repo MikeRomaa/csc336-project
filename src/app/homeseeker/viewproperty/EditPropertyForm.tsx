@@ -76,7 +76,7 @@ export const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
 						/>
 						<TextInput
 							name="zipcode"
-							value={input.zipcode}
+							value={input.zipcode.toString()}
 							onChange={handleChange}
 							placeholder="Zipcode"
 							required
@@ -97,21 +97,21 @@ export const EditPropertyForm: React.FC<EditPropertyFormProps> = ({
 						/>
 						<TextInput
 							name="area"
-							value={input.area}
+							value={input.area.toString()}
 							onChange={handleChange}
 							placeholder="Area"
 							required
 						/>
 						<TextInput
 							name="price"
-							value={input.price}
+							value={input.price.toString()}
 							onChange={handleChange}
 							placeholder="Price"
 							required
 						/>
 						<TextInput
 							name="built"
-							value={input.built}
+							value={input.built.toString()}
 							onChange={handleChange}
 							placeholder="Year Built"
 							required

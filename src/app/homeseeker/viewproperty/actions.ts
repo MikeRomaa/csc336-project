@@ -32,7 +32,7 @@ export async function deletePropertyById(id: number): Promise<boolean> {
 
 export async function updatePropertyDetails(
 	id: number,
-	updatedDetails: Partial<Property>,
+	updatedDetails: Partial<Omit<Property, "constructor">>,
 ): Promise<boolean | string> {
 	try {
 		const address = updatedDetails.address;

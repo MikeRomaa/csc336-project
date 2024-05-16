@@ -17,6 +17,7 @@ import {
 	getUserAppointments,
 	getUserProperties,
 } from "./actions";
+import { describe } from "node:test";
 
 const Account: NextPage = () => {
 	const [user, setUser] = useState<User | null>(null);
@@ -29,7 +30,7 @@ const Account: NextPage = () => {
 	const [payments, setPayments] = useState<Transaction[] | null>(null);
 	const [amount, setAmount] = useState({
 		owned: 0,
-		earned: 0,
+		earned: 0
 	});
 
 	useEffect(() => {
@@ -44,20 +45,17 @@ const Account: NextPage = () => {
 		const fetchDetails = async () => {
 			try {
 				const propertiesData = await getUserProperties(Number(user?.id));
-				const propertyAppointmentsData = await getPropertyAppointments(
-					Number(user?.id),
-				);
+				const propertyAppointmentsData = await getPropertyAppointments(Number(user?.id));
 				const appointmentsData = await getUserAppointments(Number(user?.id));
 				const transactionsData = await getPayeePayments(Number(user?.id));
 				const paymentsData = await getRecipientPayments(Number(user?.id));
-				//const amounts = await getAmount(Number(user?.id));
-				console.log(amount);
+				const amounts = await getAmount(Number(user?.id));
 				setProperties(propertiesData);
 				setPropertyAppointments(propertyAppointmentsData);
 				setAppointments(appointmentsData);
 				setTransactions(transactionsData);
 				setPayments(paymentsData);
-				//setAmount(amounts);
+				setAmount(amounts);
 			} catch (error) {
 				console.log(error);
 			}
@@ -75,11 +73,10 @@ const Account: NextPage = () => {
 						</h1>
 						<Card className="mx-auto mt-5 mb-5 h-96 overflow-y-auto">
 							<>
-								<h2>Your id: {user.id}</h2>
 								<h2>Your email: {user.email}</h2>
 								{user.is_admin ? (
 									<div>
-										<h2>Total Revenue: {amount.earned}</h2>
+										<h2>Total Revenue: </h2>
 									</div>
 								) : (
 									<div>
@@ -96,25 +93,25 @@ const Account: NextPage = () => {
 											) : (
 												<p>You have no pending fees.</p>
 											)}
-											<p>Total you owe: {amount.owned}</p>
-
+											<p>Total bill: ${amount.owned}</p>
 											{payments && payments.length > 0 ? (
 												<div>
 													<h2>Your Anticipated Payments:</h2>
 													{payments.map((payment) => (
-														<div key={payment.id}>{payment.description}</div>
+														<div key={payment.id}>
+															{payment.description}
+														</div>
 													))}
 												</div>
 											) : (
 												<p>You have no upcoming payments.</p>
 											)}
-											<p>Total you earned: {amount.earned}</p>
+											<p>Total payments: ${amount.earned}</p>
 										</div>
 									</div>
 								)}
 							</>
 						</Card>
-
 						<Card className="mx-auto h-96 overflow-y-auto">
 							{properties && properties.length > 0 ? (
 								<div className="flex flex-col items-center justify-center">

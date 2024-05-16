@@ -6,8 +6,7 @@ import type React from "react";
 import type { User } from "@/db/auth";
 import { Menu } from "@headlessui/react";
 import { useEffect, useState } from "react";
-import type { User } from "@/db/auth";
-import { Menu } from '@headlessui/react'
+import { fetchUserDetails } from "./actions";
 
 export const Navbar: React.FC = () => {
 	const [currUser, setUser] = useState<null | User>(null);
@@ -30,13 +29,15 @@ export const Navbar: React.FC = () => {
 					<Menu>
 						<Menu.Button>HomeSeeker</Menu.Button>
 						<Menu.Items className="absolute bg-white border-2 rounded-md mt-2 shadow-xl z-10">
-							<Menu.Item  >
+							<Menu.Item>
 								<Link href="/homeseeker">
-									<div className="text-black  text-sm  border-stone-950 min-full m-3">Book Property</div>
+									<div className="text-black text-sm border-stone-950 min-full m-3">
+										Book Appointment
+									</div>
 									<hr />
 								</Link>
 							</Menu.Item>
-							<Menu.Item >
+							<Menu.Item>
 								<Link href="/homeseeker/registerproperty">
 									<div className="text-black text-sm m-3 ">Register Property</div>
 								</Link>

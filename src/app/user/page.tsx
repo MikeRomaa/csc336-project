@@ -78,7 +78,7 @@ const Account: NextPage = () => {
 								<h2>Your email: {user.email}</h2>
 								{user.is_admin ? (
 									<div>
-										<h2>Total Revenue: </h2>
+										<h2>Total Revenue: {amount.earned}</h2>
 									</div>
 								) : (
 									<div>

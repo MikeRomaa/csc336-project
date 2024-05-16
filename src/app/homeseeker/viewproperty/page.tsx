@@ -45,27 +45,48 @@ const ViewProperty: NextPage = () => {
 						<>
 							<Card className="mt-5 p-5 bg-white rounded-lg">
 								<div className="grid grid-cols-2 gap-4 text-lg">
-									<p><strong>Address:</strong> {property.address}</p>
-									<p><strong>Zipcode:</strong> {property.zipcode}</p>
-									<p><strong>Type:</strong> {property.type}</p>
-									<p><strong>Asking price:</strong> ${property.price?.toLocaleString()}</p>
-									<p><strong>Area:</strong> {property.area} sq ft</p>
-									<p><strong>Rooms:</strong> {property.rooms}</p>
-									<p><strong>Year built:</strong> {property.built}</p>
+									<p>
+										<strong>Address:</strong> {property.address}
+									</p>
+									<p>
+										<strong>Zipcode:</strong> {property.zipcode}
+									</p>
+									<p>
+										<strong>Type:</strong> {property.type}
+									</p>
+									<p>
+										<strong>Asking price:</strong> $
+										{property.price?.toLocaleString()}
+									</p>
+									<p>
+										<strong>Area:</strong> {property.area} sq ft
+									</p>
+									<p>
+										<strong>Rooms:</strong> {property.rooms}
+									</p>
+									<p>
+										<strong>Year built:</strong> {property.built}
+									</p>
 								</div>
 							</Card>
-							
+
 							{user && user.id === property?.broker_id && (
 								<div>
-									<EditPropertyForm property={property} onSubmit={handleRefresh} />
-									<ScheduleForm property_id={property_id} onSubmit={handleRefresh} />
+									<EditPropertyForm
+										property={property}
+										onSubmit={handleRefresh}
+									/>
+									<ScheduleForm
+										property_id={property_id}
+										onSubmit={handleRefresh}
+									/>
 								</div>
 							)}
 						</>
 					)}
 				</div>
 				<div className="w-1/4">
-					{schedules && schedules.map((schedule) => (
+					{schedules?.map((schedule) => (
 						<Card key={schedule.id} className="mt-5">
 							<div className="flex flex-col items-center">
 								<p className="text-slate-600 text-sm">
@@ -74,13 +95,13 @@ const ViewProperty: NextPage = () => {
 								<p className="text-slate-600 text-sm">
 									End time: {new Date(schedule.end).toLocaleString()}
 								</p>
-								<Link href={{ 
-											pathname: "/homeseeker/makeappointment", 
-											query: { schedule: schedule.id } 
-											}}>
-									<Button className="ml-auto">
-										Make an appointment!
-									</Button>
+								<Link
+									href={{
+										pathname: "/homeseeker/makeappointment",
+										query: { schedule: schedule.id },
+									}}
+								>
+									<Button className="ml-auto">Make an appointment!</Button>
 								</Link>
 							</div>
 						</Card>

@@ -12,7 +12,7 @@ export const TutorTimeDropdown: React.FC = () => (
 		<Menu.Items className="absolute bg-white border-2 rounded-md mt-2 shadow-xl z-10">
 			<Menu.Item>
 				<Link href="/tutortime">
-					<div className="text-black  text-sm  border-stone-950 min-full m-3">
+					<div className="text-black text-sm border-stone-950 min-full m-3">
 						Book Tutor
 					</div>
 					<hr />

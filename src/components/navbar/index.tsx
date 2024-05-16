@@ -6,6 +6,7 @@ import type React from "react";
 import { getCurrentUser } from "@/app/cookies";
 import { SignOutButton } from "./SignOutButton";
 import { TutorTimeDropdown } from "./TutorTimeDropdown";
+import { HomeSeekerDropdown } from "./HomeSeekerDropdown";
 
 export const Navbar: React.FC = async () => {
 	const user = getCurrentUser();
@@ -21,11 +22,7 @@ export const Navbar: React.FC = async () => {
 					</Link>
 				</li>
 				<li>
-					<Link href="/homeseeker">
-						<span className="font-semibold text-2xl text-center text-blue-900">
-							Homeseeker
-						</span>
-					</Link>
+					<HomeSeekerDropdown />
 				</li>
 				<li>
 					<TutorTimeDropdown />
